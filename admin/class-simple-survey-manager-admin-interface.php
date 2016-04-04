@@ -37,12 +37,41 @@ class Simple_Survey_Manager_Admin_Interface {
 		<script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/materialize.min.js'; ?>"></script>
 		<script>
 			jQuery(document).ready(function() {
-			    jQuery('select').material_select();
+				var newQ = jQuery("#question-card-template").clone().attr("id", "");
+					newQ.appendTo('#question-card-container');
+					changeQuestionType(newQ, 3);
+			    jQuery('#question-card-container select').material_select();
+			    jQuery('#question-card-container select').on("change", function() {
+			    	changeQuestionType(jQuery(this).parents('.card'), jQuery(this).val());
+			    });
+			    jQuery("#add-question-button").click(function() {
+			    	var newQ = jQuery("#question-card-template").clone().attr("id", "");
+					newQ.appendTo('#question-card-container');
+					changeQuestionType(newQ, 3);
+					jQuery('html, body').animate({ 
+					   scrollTop: jQuery(document).height()-jQuery(window).height()}, 
+					   1400, 
+					   "easeOutQuint"
+					);
+				});
 			});
+
+			function changeQuestionType(e, t)
+			{
+				console.log(e);
+				jQuery('#question-card-container select').off("change");
+				e.find(".card-content").empty();
+				jQuery("#question-type-"+t).clone().attr("id", "").appendTo(e.find(".card-content"));
+				e.find(".card-content select").material_select();				
+				jQuery('#question-card-container select').on("change", function() {
+					changeQuestionType(jQuery(this).parents('.card'), jQuery(this).val());
+			    });
+			}
+
 		</script>
 
 		<div style="max-width: 20%; width: 20%; float: right; position: fixed; right: 10%;">
-				<a class="waves-effect waves-light btn"><i class="material-icons left">add_circle</i>Add Question</a>
+				<a id="add-question-button" class="waves-effect waves-light btn"><i class="material-icons left">add_circle</i>Add Question</a>
 		</div>
 
     	<div class="card" style="max-width: 75%; width: 75%;">
@@ -61,144 +90,108 @@ class Simple_Survey_Manager_Admin_Interface {
 	        	</form>
 	      	</div>
         </div>
-        <div class="card" style="max-width: 75%; width: 75%;">
-     		<div class="card-content">
-        		<form class="col s12">
-          			<div class="row" style="margin-bottom: 0px;">
-	        			<div class="input-field col s9">
-	          				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="survey_title" type="text" class="validate">
-	        			</div>
-	        			<div class="input-field col s3">
-		        			<select>
-						      <option value="1">Short Answer</option>
-						      <option value="2">Paragraph</option>
-						      <option value="3" selected>Multiple Choice</option>
-						      <option value="4">Checkboxes</option>
-						      <option value="5">Dropdown</option>
-						      <option value="6">Linear Scale</option>
-						      <option value="7">Date</option>
-						      <option value="8">Time</option>
-						    </select>
-	        			</div>
-	      			</div>
-	      			<div class="row">
-	      				<div class="input-field col s11">
-				    		<input placeholder="Option 1" id="first_name" type="text" class="validate">
-				    	</div>
-				    	<div class="input-field col s1" style="margin-top: 40px;">
-				    		<i class="material-icons">clear</i>
-				    	</div>
-				    </div>
-				    <div class="row">
-				    	<a href="#">Add Option</a>
-				    </div>
-	        	</form>
-	      	</div>
-	      	<div class="card-action">
-	      		<div class="row">
-		      		<div class="col s1">
-		              <i class="material-icons">delete</i>
-		            </div>
-		            <div class="col s2">
-		              <div class="switch">
-					    <label>
-					      <input type="checkbox">
-					      <span class="lever"></span>
-					      Required
-					    </label>
-					  </div>
-				  	</div>
-			  	</div>
-		    </div>
+        <div id="question-card-container">
         </div>
-        <div class="card" style="max-width: 75%; width: 75%;">
-     		<div class="card-content">
-        		<form class="col s12">
-          			<div class="row" style="margin-bottom: 0px;">
-	        			<div class="input-field col s9">
-	          				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="survey_title" type="text" class="validate">
-	        			</div>
-	        			<div class="input-field col s3">
-		        			<select>
-						      <option value="1" selected>Short Answer</option>
-						      <option value="2">Paragraph</option>
-						      <option value="3">Multiple Choice</option>
-						      <option value="4">Checkboxes</option>
-						      <option value="5">Dropdown</option>
-						      <option value="6">Linear Scale</option>
-						      <option value="7">Date</option>
-						      <option value="8">Time</option>
-						    </select>
-	        			</div>
-	      			</div>
-	      			<div class="row">
-	      				<div class="input-field col s6">
-				    		<input placeholder="Short Answer Text" id="first_name" type="text" class="validate" disabled="disabled">
-				    	</div>
-				    </div>
-	        	</form>
-	      	</div>
-	      	<div class="card-action">
-	      		<div class="row">
-		      		<div class="col s1">
-		              <i class="material-icons">delete</i>
-		            </div>
-		            <div class="col s2">
-		              <div class="switch">
-					    <label>
-					      <input type="checkbox">
-					      <span class="lever"></span>
-					      Required
-					    </label>
-					  </div>
+        <div id="question-template-container" style="display: none;">
+	        <div class="card" id="question-card-template" style="max-width: 75%; width: 75%;">
+	     		<div class="card-content">
+		      	</div>
+		      	<div class="card-action">
+		      		<div class="row">
+			      		<div class="col s1">
+			              <i class="material-icons">delete</i>
+			            </div>
+			            <div class="col s2">
+			              <div class="switch">
+						    <label>
+						      <input type="checkbox">
+						      <span class="lever"></span>
+						      Required
+						    </label>
+						  </div>
+					  	</div>
 				  	</div>
-			  	</div>
-		    </div>
-        </div>
-        <div class="card" style="max-width: 75%; width: 75%;">
-     		<div class="card-content">
-        		<form class="col s12">
-          			<div class="row" style="margin-bottom: 0px;">
-	        			<div class="input-field col s9">
-	          				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="survey_title" type="text" class="validate">
-	        			</div>
-	        			<div class="input-field col s3">
-		        			<select>
-						      <option value="1">Short Answer</option>
-						      <option value="2" selected>Paragraph</option>
-						      <option value="3">Multiple Choice</option>
-						      <option value="4">Checkboxes</option>
-						      <option value="5">Dropdown</option>
-						      <option value="6">Linear Scale</option>
-						      <option value="7">Date</option>
-						      <option value="8">Time</option>
-						    </select>
-	        			</div>
-	      			</div>
-	      			<div class="row">
-						<div class="input-field col s12">
-          					<textarea id="long-answer-textarea" placeholder="Long Answer Text" class="materialize-textarea" disabled="disabled"></textarea>
-	        			</div>
-				    </div>
-	        	</form>
-	      	</div>
-	      	<div class="card-action">
-	      		<div class="row">
-		      		<div class="col s1">
-		              <i class="material-icons">delete</i>
-		            </div>
-		            <div class="col s2">
-		              <div class="switch">
-					    <label>
-					      <input type="checkbox">
-					      <span class="lever"></span>
-					      Required
-					    </label>
-					  </div>
-				  	</div>
-			  	</div>
-		    </div>
-        </div>
+			    </div>
+	        </div>
+	        <form class="col s12" id="question-type-3">
+      			<div class="row" style="margin-bottom: 0px;">
+        			<div class="input-field col s9">
+          				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="survey_title" type="text" class="validate">
+        			</div>
+        			<div class="input-field col s3">
+	        			<select>
+					      <option value="1">Short Answer</option>
+					      <option value="2">Paragraph</option>
+					      <option value="3" selected>Multiple Choice</option>
+					      <option value="4">Checkboxes</option>
+					      <option value="5">Dropdown</option>
+					      <option value="6">Linear Scale</option>
+					      <option value="7">Date</option>
+					      <option value="8">Time</option>
+					    </select>
+        			</div>
+      			</div>
+      			<div class="row">
+      				<div class="input-field col s11">
+			    		<input placeholder="Option 1" id="first_name" type="text" class="validate">
+			    	</div>
+			    	<div class="input-field col s1" style="margin-top: 40px;">
+			    		<i class="material-icons">clear</i>
+			    	</div>
+			    </div>
+			    <div class="row">
+			    	<a href="#">Add Option</a>
+			    </div>
+        	</form>
+        	<form class="col s12" id="question-type-1">
+      			<div class="row" style="margin-bottom: 0px;">
+        			<div class="input-field col s9">
+          				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="survey_title" type="text" class="validate">
+        			</div>
+        			<div class="input-field col s3">
+	        			<select>
+					      <option value="1" selected>Short Answer</option>
+					      <option value="2">Paragraph</option>
+					      <option value="3">Multiple Choice</option>
+					      <option value="4">Checkboxes</option>
+					      <option value="5">Dropdown</option>
+					      <option value="6">Linear Scale</option>
+					      <option value="7">Date</option>
+					      <option value="8">Time</option>
+					    </select>
+        			</div>
+      			</div>
+      			<div class="row">
+      				<div class="input-field col s6">
+			    		<input placeholder="Short Answer Text" id="first_name" type="text" class="validate" disabled="disabled">
+			    	</div>
+			    </div>
+        	</form>
+        	<form class="col s12" id="question-type-2">
+      			<div class="row" style="margin-bottom: 0px;">
+        			<div class="input-field col s9">
+          				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="survey_title" type="text" class="validate">
+        			</div>
+        			<div class="input-field col s3">
+	        			<select>
+					      <option value="1">Short Answer</option>
+					      <option value="2" selected>Paragraph</option>
+					      <option value="3">Multiple Choice</option>
+					      <option value="4">Checkboxes</option>
+					      <option value="5">Dropdown</option>
+					      <option value="6">Linear Scale</option>
+					      <option value="7">Date</option>
+					      <option value="8">Time</option>
+					    </select>
+        			</div>
+      			</div>
+      			<div class="row">
+					<div class="input-field col s12">
+      					<textarea id="long-answer-textarea" placeholder="Long Answer Text" class="materialize-textarea" disabled="disabled"></textarea>
+        			</div>
+			    </div>
+        	</form>
+	    </div>
 		<?php
 	}
 }
