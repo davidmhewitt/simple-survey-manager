@@ -44,9 +44,11 @@ class Simple_Survey_Manager_Admin_Interface {
 			    jQuery('#question-card-container select').on("change", function() {
 			    	changeQuestionType(jQuery(this).parents('.card'), jQuery(this).val());
 			    });
+			    resetDeleteEventHandler();
 			    jQuery("#add-question-button").click(function() {
 			    	var newQ = jQuery("#question-card-template").clone().attr("id", "");
 					newQ.appendTo('#question-card-container');
+					resetDeleteEventHandler();
 					changeQuestionType(newQ, 3);
 					jQuery('html, body').animate({ 
 					   scrollTop: jQuery(document).height()-jQuery(window).height()}, 
@@ -55,6 +57,16 @@ class Simple_Survey_Manager_Admin_Interface {
 					);
 				});
 			});
+
+			function resetDeleteEventHandler()
+			{
+				jQuery(".question-delete-button").off('click');
+				jQuery(".question-delete-button").on('click', function() {
+			    	jQuery(this).parents('.card').slideUp("slow", function() {
+		    			jQuery(this).remove();
+			    	});
+			    });
+			}
 
 			function changeQuestionType(e, t)
 			{
@@ -99,7 +111,7 @@ class Simple_Survey_Manager_Admin_Interface {
 		      	<div class="card-action">
 		      		<div class="row">
 			      		<div class="col s1">
-			              <i class="material-icons">delete</i>
+			              <span class="question-delete-button" style="cursor: pointer;"><i class="material-icons">delete</i></span>
 			            </div>
 			            <div class="col s2">
 			              <div class="switch">
