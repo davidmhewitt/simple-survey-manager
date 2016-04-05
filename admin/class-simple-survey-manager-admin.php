@@ -143,4 +143,25 @@ class Simple_Survey_Manager_Admin {
 		$admin_interface = new Simple_Survey_Manager_Admin_Interface();
 		add_meta_box( 'ssm_survey_meta_box', __('Questions'), array($admin_interface, 'render_interface'), 'ssm_survey', 'normal', 'high' );
 	}
+
+	public function save_survey_hook($post_id)
+	{
+        if ( ! current_user_can( 'edit_posts' ) )
+            return;
+
+        remove_action( 'save_post_ssm_survey', Array($this, 'save_survey_hook'));
+        $survey_title = $this->sanitized_text('survey_title');
+        wp_update_post( array( 'ID' => $post_id, 'post_title' => $survey_title ) );
+        update_post_meta($post_id, 'survey_description', $this->sanitized_text('survey_description'));
+        add_action( 'save_post_ssm_survey', Array($this, 'save_survey_hook'));
+
+	}
+
+	private function sanitized_text ( $id ) {
+        $data = '';
+        if ( isset( $_POST[ $id ] ) ) {
+            $data = $_POST[ $id ];
+        }
+        return sanitize_text_field( $data );
+    }
 }

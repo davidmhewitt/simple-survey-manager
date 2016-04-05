@@ -31,6 +31,9 @@ class Simple_Survey_Manager_Admin_Interface {
 	 * @since    1.0.0
 	 */
 	public static function render_interface() {
+		$survey_id = get_the_ID();
+		$survey_description = get_post_meta($survey_id, 'survey_description', true);
+		wp_nonce_field( 'my_meta_box_nonce', 'meta_box_nonce' );
 		?>
 		<link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url( __FILE__ ) . 'css/materialize.min.css'; ?>">
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -88,18 +91,18 @@ class Simple_Survey_Manager_Admin_Interface {
 
     	<div class="card" style="max-width: 75%; width: 75%;">
      		<div class="card-content">
-        		<form class="col s12">
+        		<div class="col s12">
           			<div class="row">
 	        			<div class="input-field col s12">
-	          				<input style="font-size: 20pt; line-height: 20pt;" placeholder="Untitled Survey" id="survey_title" type="text" class="validate">
+	          				<input style="font-size: 20pt; line-height: 20pt;" placeholder="Untitled Survey" id="survey_title" name="survey_title" type="text" class="validate" value="<?php echo get_the_title(); ?>">
 	          				<label for="survey_title">Survey Title</label>
 	        			</div>
 	        			<div class="input-field col s12">
-          					<textarea id="textarea1" class="materialize-textarea"></textarea>
-	          				<label for="textarea1">Survey Description</label>
+          					<textarea id="survey_description" class="materialize-textarea" name="survey_description"><?php echo $survey_description; ?></textarea>
+	          				<label for="survey_description">Survey Description</label>
 	        			</div>
         			</div>
-	        	</form>
+	        	</div>
 	      	</div>
         </div>
         <div id="question-card-container">
@@ -125,7 +128,7 @@ class Simple_Survey_Manager_Admin_Interface {
 				  	</div>
 			    </div>
 	        </div>
-	        <form class="col s12" id="question-type-3">
+	        <div class="col s12" id="question-type-3">
       			<div class="row" style="margin-bottom: 0px;">
         			<div class="input-field col s9">
           				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="survey_title" type="text" class="validate">
@@ -154,8 +157,8 @@ class Simple_Survey_Manager_Admin_Interface {
 			    <div class="row">
 			    	<a href="#">Add Option</a>
 			    </div>
-        	</form>
-        	<form class="col s12" id="question-type-1">
+        	</div>
+        	<div class="col s12" id="question-type-1">
       			<div class="row" style="margin-bottom: 0px;">
         			<div class="input-field col s9">
           				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="survey_title" type="text" class="validate">
@@ -178,8 +181,8 @@ class Simple_Survey_Manager_Admin_Interface {
 			    		<input placeholder="Short Answer Text" id="first_name" type="text" class="validate" disabled="disabled">
 			    	</div>
 			    </div>
-        	</form>
-        	<form class="col s12" id="question-type-2">
+        	</div>
+        	<div class="col s12" id="question-type-2">
       			<div class="row" style="margin-bottom: 0px;">
         			<div class="input-field col s9">
           				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="survey_title" type="text" class="validate">
@@ -202,7 +205,7 @@ class Simple_Survey_Manager_Admin_Interface {
       					<textarea id="long-answer-textarea" placeholder="Long Answer Text" class="materialize-textarea" disabled="disabled"></textarea>
         			</div>
 			    </div>
-        	</form>
+        	</div>
 	    </div>
 		<?php
 	}
