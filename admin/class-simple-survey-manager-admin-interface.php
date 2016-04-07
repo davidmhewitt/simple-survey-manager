@@ -88,9 +88,10 @@ class Simple_Survey_Manager_Admin_Interface {
 
 			function updateQuestionNumbers()
 			{
-				jQuery("#question-card-container .card-content").each(function(index) {
+				jQuery("#question-card-container .card").each(function(index) {
 					jQuery(this).find('#question').attr('name', 'question[' + index + ']');
 					jQuery(this).find('#question_type_select').attr('name', 'question_type[' + index + ']');
+					jQuery(this).find('#question_required').attr('name', 'question_required[' + index + ']');
 				});
 			}
 
@@ -130,7 +131,7 @@ class Simple_Survey_Manager_Admin_Interface {
 			            <div class="col s2">
 			              <div class="switch">
 						    <label>
-						      <input type="checkbox">
+						      <input type="checkbox" id="question_required">
 						      <span class="lever"></span>
 						      Required
 						    </label>
