@@ -43,11 +43,13 @@ class Simple_Survey_Manager_Admin_Interface {
 				var newQ = jQuery("#question-card-template").clone().attr("id", "");
 				newQ.appendTo('#question-card-container');
 				changeQuestionType(newQ, 3);
+				resetDeleteEventHandler();
+
 			    jQuery('#question-card-container select').material_select();
 			    jQuery('#question-card-container select').on("change", function() {
 			    	changeQuestionType(jQuery(this).parents('.card'), jQuery(this).val());
 			    });
-			    resetDeleteEventHandler();
+			    
 			    jQuery("#add-question-button").click(function() {
 			    	var newQ = jQuery("#question-card-template").clone().attr("id", "");
 					newQ.appendTo('#question-card-container');
@@ -58,6 +60,14 @@ class Simple_Survey_Manager_Admin_Interface {
 					   1400, 
 					   "easeOutQuint"
 					);
+					updateQuestionNumbers();
+				});
+
+				jQuery('.add_multiple_choice_answer').click(function() {
+					console.log("add clicked");
+					var answersDiv = jQuery(this).parents('.card-content').find('.answers');
+					console.log(answersDiv);
+					answersDiv.append(answersDiv.find('.row').first().clone());
 					updateQuestionNumbers();
 				});
 			});
@@ -92,6 +102,9 @@ class Simple_Survey_Manager_Admin_Interface {
 					jQuery(this).find('#question').attr('name', 'question[' + index + ']');
 					jQuery(this).find('#question_type_select').attr('name', 'question_type[' + index + ']');
 					jQuery(this).find('#question_required').attr('name', 'question_required[' + index + ']');
+					jQuery(this).find('.given_answer').each(function(answer_index) {
+						jQuery(this).attr('name', 'given_answer[' + index + '][' + answer_index + ']');
+					});
 				});
 			}
 
@@ -158,16 +171,18 @@ class Simple_Survey_Manager_Admin_Interface {
 					    </select>
         			</div>
       			</div>
-      			<div class="row">
-      				<div class="input-field col s11">
-			    		<input placeholder="Option 1" id="first_name" type="text" class="validate">
-			    	</div>
-			    	<div class="input-field col s1" style="margin-top: 40px;">
-			    		<i class="material-icons">clear</i>
-			    	</div>
-			    </div>
+      			<div class="answers">
+	      			<div class="row">
+	      				<div class="input-field col s11">
+				    		<input placeholder="Option 1" type="text" class="given_answer validate">
+				    	</div>
+				    	<div class="input-field col s1" style="margin-top: 40px;">
+				    		<i class="material-icons">clear</i>
+				    	</div>
+				    </div>
+				</div>
 			    <div class="row">
-			    	<a href="#">Add Option</a>
+			    	<a href="#" class="add_multiple_choice_answer">Add Option</a>
 			    </div>
         	</div>
         	<div class="col s12" id="question-type-1">
