@@ -149,10 +149,50 @@ class Simple_Survey_Manager_Admin {
         if ( ! current_user_can( 'edit_posts' ) )
             return;
 
+        global $wpdb;
+
         remove_action( 'save_post_ssm_survey', Array($this, 'save_survey_hook'));
         $survey_title = $this->sanitized_text('survey_title');
         wp_update_post( array( 'ID' => $post_id, 'post_title' => $survey_title ) );
         update_post_meta($post_id, 'survey_description', $this->sanitized_text('survey_description'));
+
+        $table_name = $wpdb->prefix . "ssm_surveys"; 
+
+		$current_user = wp_get_current_user();
+
+    	$wpdb->insert( 
+			$table_name, 
+			array( 
+				'survey_name' => $this->sanitized_text('survey_title'), 
+				'last_activity' => current_time( 'mysql' ), 
+				'require_log_in' => 0, 
+				'user' => $current_user->user_login,
+				'survey_taken' => 0,
+				'deleted' => 0,
+			) 
+		);
+
+    	$survey_id = $wpdb->insert_id;
+		$table_name = $wpdb->prefix . "ssm_questions"; 
+
+		$i = 0;
+        foreach($_POST['question'] as $question)
+        {
+        	$wpdb->insert( 
+				$table_name, 
+				array( 
+					'survey_id' => $survey_id, 
+					'question_name' => $this->sanitized_text('survey_title'), 
+					'question_order' => $i,
+					'question_type' => sanitize_text_field($_POST['question_type'][$i]),
+					'deleted' => 0,
+					'required' => 0,
+					'answer_array' => "{}",
+				) 
+			);
+			$i = $i + 1;
+        }
+
         add_action( 'save_post_ssm_survey', Array($this, 'save_survey_hook'));
 
 	}

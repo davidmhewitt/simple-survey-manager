@@ -64,9 +64,7 @@ class Simple_Survey_Manager_Admin_Interface {
 				});
 
 				jQuery('.add_multiple_choice_answer').click(function() {
-					console.log("add clicked");
 					var answersDiv = jQuery(this).parents('.card-content').find('.answers');
-					console.log(answersDiv);
 					answersDiv.append(answersDiv.find('.row').first().clone());
 					updateQuestionNumbers();
 				});
@@ -85,7 +83,6 @@ class Simple_Survey_Manager_Admin_Interface {
 
 			function changeQuestionType(e, t)
 			{
-				console.log(e);
 				jQuery('#question-card-container select').off("change");
 				e.find(".card-content").empty();
 				jQuery("#question-type-"+t).clone().attr("id", "").appendTo(e.find(".card-content"));

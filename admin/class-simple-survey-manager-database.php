@@ -34,7 +34,6 @@ class Simple_Survey_Manager_Database {
 		$charset_collate = $wpdb->get_charset_collate();
 
 		$survey_table_name = $wpdb->prefix . "ssm_surveys";
-		$section_table_name = $wpdb->prefix . "ssm_sections";
 		$question_table_name = $wpdb->prefix . "ssm_questions";
 		$answer_table_name = $wpdb->prefix . "ssm_answers";
 
@@ -54,30 +53,15 @@ class Simple_Survey_Manager_Database {
 			dbDelta( $sql );
 		}
 
-		if( $wpdb->get_var( "SHOW TABLES LIKE '$section_table_name'" ) != $section_table_name ) {
-			$sql = "CREATE TABLE $section_table_name (
-				section_id mediumint(9) NOT NULL AUTO_INCREMENT,
-				survey_id INT NOT NULL,
-				section_name TEXT NOT NULL,
-				section_order INT NOT NULL,
-				description TEXT NOT NULL,
-				deleted INT NOT NULL,
-				PRIMARY KEY  (section_id)
-			) $charset_collate;";
-
-			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-			dbDelta( $sql );
-		}
-
 		if( $wpdb->get_var( "SHOW TABLES LIKE '$question_table_name'" ) != $question_table_name ) {
 			$sql = "CREATE TABLE $question_table_name (
 				question_id mediumint(9) NOT NULL AUTO_INCREMENT,
 				survey_id INT NOT NULL,
-				section_id INT NOT NULL,
 				question_name TEXT NOT NULL,
 				answer_array TEXT NOT NULL,
 				question_order INT NOT NULL,
 				question_type INT NOT NULL,
+				required INT NOT NULL,
 				deleted INT NOT NULL,
 				PRIMARY KEY  (question_id)
 			) $charset_collate;";
