@@ -34,27 +34,28 @@ class Simple_Survey_Manager_Admin_Interface {
 		$survey_id = get_the_ID();
 		$survey_description = get_post_meta($survey_id, 'survey_description', true);
 		wp_nonce_field( 'my_meta_box_nonce', 'meta_box_nonce' );
+
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-survey-manager-db-model.php';
+
+		$survey = SSM_Model_Surveys::get_by_wp_id($survey_id);
+		$questions = SSM_Model_Questions::get_all_for_survey_id($survey->survey_id);
 		?>
 		<link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url( __FILE__ ) . 'css/materialize.min.css'; ?>">
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/materialize.min.js'; ?>"></script>
 		<script>
 			jQuery(document).ready(function() {
-				var newQ = jQuery("#question-card-template").clone().attr("id", "");
-				newQ.appendTo('#question-card-container');
-				changeQuestionType(newQ, 3);
-				resetDeleteEventHandler();
-
-			    jQuery('#question-card-container select').material_select();
+				var questions = <?php print json_encode($questions); ?>;
+				jQuery.each(questions, function() {
+					createQuestion(this['question_type']);
+				});
+				jQuery('#question-card-container select').material_select();
 			    jQuery('#question-card-container select').on("change", function() {
 			    	changeQuestionType(jQuery(this).parents('.card'), jQuery(this).val());
 			    });
 			    
 			    jQuery("#add-question-button").click(function() {
-			    	var newQ = jQuery("#question-card-template").clone().attr("id", "");
-					newQ.appendTo('#question-card-container');
-					resetDeleteEventHandler();
-					changeQuestionType(newQ, 3);
+			    	createQuestion(3);
 					jQuery('html, body').animate({ 
 					   scrollTop: jQuery(document).height()-jQuery(window).height()}, 
 					   1400, 
@@ -69,6 +70,14 @@ class Simple_Survey_Manager_Admin_Interface {
 					updateQuestionNumbers();
 				});
 			});
+
+			function createQuestion(type)
+			{
+				var newQ = jQuery("#question-card-template").clone().attr("id", "");
+				newQ.appendTo('#question-card-container');
+				changeQuestionType(newQ, type);
+				resetDeleteEventHandler();
+			}
 
 			function resetDeleteEventHandler()
 			{

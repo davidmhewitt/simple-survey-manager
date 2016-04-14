@@ -64,5 +64,12 @@ class SSM_Model_Questions extends SSM_Model {
         $sql = sprintf( 'DELETE FROM %s WHERE survey_id = %s', self::_table(), $survey_id );
         return $wpdb->query( $sql );
     }
+
+    static function get_all_for_survey_id($survey_id)
+    {
+        global $wpdb;
+        $sql = sprintf( 'SELECT * FROM %s WHERE survey_id = %s ORDER BY question_order ASC', self::_table(), $survey_id);
+        return $wpdb->get_results($sql);
+    }
 }
 ?>

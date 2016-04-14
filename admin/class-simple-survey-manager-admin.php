@@ -177,7 +177,7 @@ class Simple_Survey_Manager_Admin {
 			SSM_Model_Surveys::insert($data);
 		}
 
-    	$survey_id = SSM_Model_Surveys::insert_id();
+    	$survey_id = SSM_Model_Surveys::get_by_wp_id($post_id)->survey_id;
     	SSM_Model_Questions::delete_all_for_survey_id($survey_id);
 
 		$i = 0;
