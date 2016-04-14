@@ -46,6 +46,7 @@ class Simple_Survey_Manager_Database {
 				user TEXT NOT NULL,
 				survey_taken INT NOT NULL,
 				deleted INT NOT NULL,
+				wp_post_id INT NOT NULL,
 				PRIMARY KEY  (survey_id)
 			) $charset_collate;";
 

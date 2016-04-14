@@ -156,7 +156,7 @@ class Simple_Survey_Manager {
 
 		$this->loader->add_action( 'init', $plugin_admin, 'register_custom_post_type');
 		$this->loader->add_action( 'add_meta_boxes_ssm_survey', $plugin_admin, 'register_custom_meta_box');
-		$this->loader->add_action( 'save_post_ssm_survey', $plugin_admin, 'save_survey_hook');
+		$this->loader->add_action( 'save_post_ssm_survey', $plugin_admin, 'save_survey_hook', 10, 3);
 
 	}
 
