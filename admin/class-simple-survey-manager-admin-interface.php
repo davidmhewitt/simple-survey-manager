@@ -47,7 +47,7 @@ class Simple_Survey_Manager_Admin_Interface {
 			jQuery(document).ready(function() {
 				var questions = <?php print json_encode($questions); ?>;
 				jQuery.each(questions, function() {
-					createQuestion(this['question_type']);
+					createQuestion(this['question_type'], this['question_name']);
 				});
 				jQuery('#question-card-container select').material_select();
 			    jQuery('#question-card-container select').on("change", function() {
@@ -66,16 +66,21 @@ class Simple_Survey_Manager_Admin_Interface {
 
 				jQuery('.add_multiple_choice_answer').click(function() {
 					var answersDiv = jQuery(this).parents('.card-content').find('.answers');
-					answersDiv.append(answersDiv.find('.row').first().clone());
+					var givenAnswerClone = answersDiv.find('.row').first().clone();
+					givenAnswerClone.find('.given_answer').val("");
+					answersDiv.append(givenAnswerClone);
 					updateQuestionNumbers();
 				});
 			});
 
-			function createQuestion(type)
+			function createQuestion(type, question_text)
 			{
-				var newQ = jQuery("#question-card-template").clone().attr("id", "");
+				if (typeof question_text === 'undefined') { question_text = ''; }
+
+				var newQ = jQuery("#question-card-template").clone().attr("id", "");				
 				newQ.appendTo('#question-card-container');
 				changeQuestionType(newQ, type);
+				newQ.find("#question").val(question_text);
 				resetDeleteEventHandler();
 			}
 
