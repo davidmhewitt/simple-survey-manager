@@ -47,7 +47,7 @@ class Simple_Survey_Manager_Admin_Interface {
 			jQuery(document).ready(function() {
 				var questions = <?php print json_encode($questions); ?>;
 				jQuery.each(questions, function() {
-					createQuestion(this['question_type'], this['question_name']);
+					createQuestion(this['question_type'], this['question_name'], this['required'], JSON.parse(this['answer_array']));
 				});
 				jQuery('#question-card-container select').material_select();
 			    jQuery('#question-card-container select').on("change", function() {
@@ -64,24 +64,52 @@ class Simple_Survey_Manager_Admin_Interface {
 					updateQuestionNumbers();
 				});
 
-				jQuery('.add_multiple_choice_answer').click(function() {
-					var answersDiv = jQuery(this).parents('.card-content').find('.answers');
-					var givenAnswerClone = answersDiv.find('.row').first().clone();
-					givenAnswerClone.find('.given_answer').val("");
-					answersDiv.append(givenAnswerClone);
-					updateQuestionNumbers();
-				});
+				resetAddMultipleChoiceHandler();
 			});
+			
+			function resetAddMultipleChoiceHandler()
+			{
+				jQuery(".add_multiple_choice_answer").off('click');
+				jQuery('.add_multiple_choice_answer').on('click', function() {
+					addMultipleChoiceAnswer(this);
+					return false;
+				});	
+			}
+			
+			function addMultipleChoiceAnswer(element, text)
+			{
+				if(typeof text === 'undefined') { text = ""; }
 
-			function createQuestion(type, question_text)
+				var answersDiv = jQuery(element).parents('.card-content').find('.answers');
+				var firstAnswer = answersDiv.find('.given_answer').val();
+				if(firstAnswer != null && firstAnswer != "")
+				{
+					var givenAnswerClone = answersDiv.find('.row').first().clone();
+					givenAnswerClone.find('.given_answer').val(text);
+					answersDiv.append(givenAnswerClone);
+				} else {
+					answersDiv.find('.given_answer').val(text);
+				}
+				
+				updateQuestionNumbers();
+			}
+
+			function createQuestion(type, question_text, required, given_answers)
 			{
 				if (typeof question_text === 'undefined') { question_text = ''; }
+				if (typeof required === 'undefined') { required = '0'; }
+				if (typeof given_answers === 'undefined') { given_answers = []; }
 
 				var newQ = jQuery("#question-card-template").clone().attr("id", "");				
 				newQ.appendTo('#question-card-container');
 				changeQuestionType(newQ, type);
 				newQ.find("#question").val(question_text);
+				newQ.find("#question_required").prop("checked", required == '0' ? false : true);
+				jQuery.each(given_answers, function() {
+					addMultipleChoiceAnswer(newQ.find("#question"), this)
+				});
 				resetDeleteEventHandler();
+				resetAddMultipleChoiceHandler();
 			}
 
 			function resetDeleteEventHandler()
@@ -183,11 +211,11 @@ class Simple_Survey_Manager_Admin_Interface {
         			</div>
       			</div>
       			<div class="answers">
-	      			<div class="row">
-	      				<div class="input-field col s11">
+	      			<div class="row" style="margin-bottom: 0px;">
+	      				<div class="input-field col s11" style="margin-top: 0px;">
 				    		<input placeholder="Option 1" type="text" class="given_answer validate">
 				    	</div>
-				    	<div class="input-field col s1" style="margin-top: 40px;">
+				    	<div class="input-field col s1" style="margin-top: 20px;">
 				    		<i class="material-icons">clear</i>
 				    	</div>
 				    </div>
