@@ -21,7 +21,7 @@ get_header(); ?>
             {
                 $required_string = $question->required != '0' ? "&nbsp;<span style='color:red;'>*</span>" : "";
                 echo "<h2>" . $question->question_name . $required_string . "</h2>";
-                //createQuestionForm
+                createQuestionForm($question->question_type, $question->question_order, $question->answer_array);
             }
         ?>
 
@@ -30,3 +30,30 @@ get_header(); ?>
 </div><!-- .content-area -->
 
 <?php get_footer(); ?>
+
+<?php
+    function createQuestionForm($type, $order, $answers)
+    {
+        switch ($type) {
+            case 1:
+                echo "<input type=\"text\" name=\"answer[" . $order . "]\"/>";
+                break;
+            
+            case 2:
+                echo "<textarea name=\"answer[" . $order . "]\"></textarea>";
+                break;
+                
+            case 3:
+                $answers = json_decode($answers);
+                $i = 0;
+                foreach($answers as $answer)
+                {
+                    echo "<input type=\"radio\" name=\"answer[" . $order . "]\" value=\"". $i ."\">". $answer ."<br>";
+                    $i++;              
+                }
+                break;
+            default:
+                break;
+        }
+    }
+?>
