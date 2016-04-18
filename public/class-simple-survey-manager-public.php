@@ -99,5 +99,23 @@ class Simple_Survey_Manager_Public {
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/simple-survey-manager-public.js', array( 'jquery' ), $this->version, false );
 
 	}
+	
+	/**
+	 * Register the template for the public-facing side of the site.
+	 *
+	 * @since    1.0.0
+	 */
+	public function post_template($single) {
+
+		global $post;
+
+		/* Checks for single template by post type */
+		if ($post->post_type == "ssm_survey"){
+		if(file_exists(dirname(__FILE__). '/simple-survey-manager-survey-template.php'))
+			return dirname(__FILE__) . '/simple-survey-manager-survey-template.php';
+		}
+		return $single;
+
+	}
 
 }
