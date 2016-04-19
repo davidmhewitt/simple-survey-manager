@@ -61,6 +61,17 @@ get_header(); ?>
                     $i++;              
                 }
                 break;
+            case 5:
+                $answers = json_decode($answers);
+                $i = 0;
+                echo "<select name=\"answer[" . $order . "]\">";
+                foreach($answers as $answer)
+                {
+                    echo "<option value=\"". $i ."\">". $answer ."</option>";
+                    $i++;              
+                }
+                echo "</select>";
+                break;
             default:
                 break;
         }

@@ -305,6 +305,38 @@ class Simple_Survey_Manager_Admin_Interface {
 			    	<a href="#" class="add_multiple_choice_answer">Add Option</a>
 			    </div>
         	</div>
+			<div class="col s12" id="question-type-5">
+      			<div class="row" style="margin-bottom: 0px;">
+        			<div class="input-field col s9">
+          				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="question" type="text" class="validate">
+        			</div>
+        			<div class="input-field col s3">
+	        			<select id="question_type_select">
+					      <option value="1">Short Answer</option>
+					      <option value="2">Paragraph</option>
+					      <option value="3">Multiple Choice</option>
+					      <option value="4">Checkboxes</option>
+					      <option value="5" selected>Dropdown</option>
+					      <option value="6">Linear Scale</option>
+					      <option value="7">Date</option>
+					      <option value="8">Time</option>
+					    </select>
+        			</div>
+      			</div>
+      			<div class="answers">
+	      			<div class="row" style="margin-bottom: 0px;">
+	      				<div class="input-field col s11" style="margin-top: 0px;">
+				    		<input placeholder="Option 1" type="text" class="given_answer validate">
+				    	</div>
+				    	<div class="input-field col s1" style="margin-top: 20px;">
+				    		<i class="material-icons">clear</i>
+				    	</div>
+				    </div>
+				</div>
+			    <div class="row">
+			    	<a href="#" class="add_multiple_choice_answer">Add Option</a>
+			    </div>
+        	</div>
 	    </div>
 		<?php
 	}
