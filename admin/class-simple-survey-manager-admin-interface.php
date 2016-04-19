@@ -71,7 +71,7 @@ class Simple_Survey_Manager_Admin_Interface {
 			{
 				jQuery(".add_multiple_choice_answer").off('click');
 				jQuery('.add_multiple_choice_answer').on('click', function() {
-					addMultipleChoiceAnswer(this);
+					addMultipleChoiceAnswer(jQuery(this));
 					return false;
 				});	
 			}
@@ -80,7 +80,7 @@ class Simple_Survey_Manager_Admin_Interface {
 			{
 				if(typeof text === 'undefined') { text = ""; }
 
-				var answersDiv = jQuery(element).parents('.card-content').find('.answers');
+				var answersDiv = element.parents('.card-content').find('.answers');
 				var firstAnswer = answersDiv.find('.given_answer').val();
 				if(firstAnswer != null && firstAnswer != "")
 				{
@@ -133,6 +133,7 @@ class Simple_Survey_Manager_Admin_Interface {
 					changeQuestionType(jQuery(this).parents('.card'), jQuery(this).val());
 			    });
 			    updateQuestionNumbers();
+				resetAddMultipleChoiceHandler();
 			}
 
 			function updateQuestionNumbers()
@@ -270,6 +271,38 @@ class Simple_Survey_Manager_Admin_Interface {
 					<div class="input-field col s12">
       					<textarea id="long-answer-textarea" placeholder="Long Answer Text" class="materialize-textarea" disabled="disabled"></textarea>
         			</div>
+			    </div>
+        	</div>
+			<div class="col s12" id="question-type-4">
+      			<div class="row" style="margin-bottom: 0px;">
+        			<div class="input-field col s9">
+          				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="question" type="text" class="validate">
+        			</div>
+        			<div class="input-field col s3">
+	        			<select id="question_type_select">
+					      <option value="1">Short Answer</option>
+					      <option value="2">Paragraph</option>
+					      <option value="3">Multiple Choice</option>
+					      <option value="4" selected>Checkboxes</option>
+					      <option value="5">Dropdown</option>
+					      <option value="6">Linear Scale</option>
+					      <option value="7">Date</option>
+					      <option value="8">Time</option>
+					    </select>
+        			</div>
+      			</div>
+      			<div class="answers">
+	      			<div class="row" style="margin-bottom: 0px;">
+	      				<div class="input-field col s11" style="margin-top: 0px;">
+				    		<input placeholder="Option 1" type="text" class="given_answer validate">
+				    	</div>
+				    	<div class="input-field col s1" style="margin-top: 20px;">
+				    		<i class="material-icons">clear</i>
+				    	</div>
+				    </div>
+				</div>
+			    <div class="row">
+			    	<a href="#" class="add_multiple_choice_answer">Add Option</a>
 			    </div>
         	</div>
 	    </div>

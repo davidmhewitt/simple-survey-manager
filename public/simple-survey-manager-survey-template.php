@@ -52,6 +52,15 @@ get_header(); ?>
                     $i++;              
                 }
                 break;
+            case 4:
+                $answers = json_decode($answers);
+                $i = 0;
+                foreach($answers as $answer)
+                {
+                    echo "<input type=\"checkbox\" name=\"answer[" . $order . "][]\" value=\"". $i ."\">". $answer ."<br>";
+                    $i++;              
+                }
+                break;
             default:
                 break;
         }
