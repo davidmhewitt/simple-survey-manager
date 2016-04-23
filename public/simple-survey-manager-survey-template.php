@@ -1,4 +1,7 @@
 <?php
+    wp_register_script( 'jquery-validate-script', plugin_dir_url( __FILE__ ) . 'js/jquery.validate.min.js' ,array( 'jquery'));
+    wp_enqueue_script( 'jquery-validate-script' );
+
     if( isset( $_POST['submitSurvey'] ) )
     {
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-survey-manager-db-model.php';
@@ -63,21 +66,33 @@ get_header(); ?>
             $questions = SSM_Model_Questions::get_all_for_survey_id($survey->survey_id);
 		?>
         
+        <div id="summary" style="color: red;"></div>
         <h1><?php single_post_title(); ?> </h1>
         <?php echo $survey_description; ?>
-        
+
         <form action="" id="contactForm" method="POST" enctype="multipart/form-data">
         <?php
             foreach($questions as $question)
             {
                 $required_string = $question->required != '0' ? "&nbsp;<span style='color:red;'>*</span>" : "";
                 echo "<h2>" . $question->question_name . $required_string . "</h2>";
-                createQuestionForm($question->question_type, $question->question_order, $question->answer_array);
+                createQuestionForm($question->question_type, $question->question_order, $question->answer_array, $question->required);
             }
         ?>
         <br/><br/>
         <input type="submit" name="submitSurvey"/>
         </form>
+        <script>
+            jQuery("#contactForm").validate({
+                showErrors: function(errorMap, errorList) {
+                    jQuery("#summary").html("Your form contains "
+                        + this.numberOfInvalids()
+                        + " errors, please ensure all required sections are filled in.");
+                   window.scrollTo(0, 0);
+                },
+                focusInvalid: false,
+            });
+        </script>
 
 	</main><!-- .site-main -->
 
@@ -86,15 +101,16 @@ get_header(); ?>
 <?php get_footer(); ?>
 
 <?php
-    function createQuestionForm($type, $order, $answers)
+    function createQuestionForm($type, $order, $answers, $required)
     {
+        $required_string = $required != '0' ? "required" : "";
         switch ($type) {
-            case 1:
-                echo "<input type=\"text\" name=\"answer[" . $order . "]\"/>";
+            case 1:                
+                echo "<input type=\"text\" name=\"answer[" . $order . "]\" ". $required_string. "/>";
                 break;
             
             case 2:
-                echo "<textarea name=\"answer[" . $order . "]\"></textarea>";
+                echo "<textarea name=\"answer[" . $order . "]\" ". $required_string. "></textarea>";
                 break;
                 
             case 3:
@@ -102,7 +118,7 @@ get_header(); ?>
                 $i = 0;
                 foreach($answers as $answer)
                 {
-                    echo "<input type=\"radio\" name=\"answer[" . $order . "]\" value=\"". $i ."\">". $answer ."<br>";
+                    echo "<input type=\"radio\" name=\"answer[" . $order . "]\" value=\"". $i ."\" ". $required_string .">". $answer ."<br>";
                     $i++;              
                 }
                 break;
@@ -148,7 +164,7 @@ get_header(); ?>
                 for($i = $answers->start_number; $i <= $answers->end_number; $i++)
                 {
                     echo '<div class="tableRight">';
-                    echo '<input type="radio" name="answer[' . $order . ']" value="'. $i .'" />';
+                    echo '<input type="radio" name="answer[' . $order . ']" value="'. $i .'" '. $required_string. '/>';
                     echo '</div>';
                 }
                 echo '<div class="tableRight">';

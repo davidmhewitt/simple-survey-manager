@@ -137,6 +137,7 @@ class Simple_Survey_Manager_Admin {
 		if ($post->post_type=='ssm_survey')
 		{
 			$actions['results'] = '<a href="#" title="" rel="permalink">View Results</a>';
+			unset($actions['inline hide-if-no-js']);
 		}
 		return $actions;
 	}
