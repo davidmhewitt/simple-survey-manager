@@ -183,13 +183,25 @@ class Simple_Survey_Manager_Admin_Interface {
 				jQuery('#linear_start_select').off('change');
 				jQuery('#linear_start_select').on('change', function() {
 					var answersDiv = jQuery(this).parents('.card-content').find('.answers');
-					generateLinearScale(answersDiv, jQuery('#linear_start_select').val(), jQuery('#linear_end_select').val());
+					generateLinearScale(answersDiv, jQuery('#linear_start_select').val(), jQuery('#linear_end_select').val(), jQuery('#linear_left_label').val(), jQuery('#linear_right_label').val());
 				});
 				
 				jQuery('#linear_end_select').off('change');
 				jQuery('#linear_end_select').on('change', function() {
 					var answersDiv = jQuery(this).parents('.card-content').find('.answers');
-					generateLinearScale(answersDiv, jQuery('#linear_start_select').val(), jQuery('#linear_end_select').val());
+					generateLinearScale(answersDiv, jQuery('#linear_start_select').val(), jQuery('#linear_end_select').val(), jQuery('#linear_left_label').val(), jQuery('#linear_right_label').val());
+				});
+				
+				jQuery('#linear_left_label').off('change');
+				jQuery('#linear_left_label').on('change', function() {
+					var answersDiv = jQuery(this).parents('.card-content').find('.answers');
+					generateLinearScale(answersDiv, jQuery('#linear_start_select').val(), jQuery('#linear_end_select').val(), jQuery('#linear_left_label').val(), jQuery('#linear_right_label').val());
+				});
+				
+				jQuery('#linear_right_label').off('change');
+				jQuery('#linear_right_label').on('change', function() {
+					var answersDiv = jQuery(this).parents('.card-content').find('.answers');
+					generateLinearScale(answersDiv, jQuery('#linear_start_select').val(), jQuery('#linear_end_select').val(), jQuery('#linear_left_label').val(), jQuery('#linear_right_label').val());
 				});
 			}
 			
@@ -509,6 +521,16 @@ class Simple_Survey_Manager_Admin_Interface {
 							<option value="10">10</option>
 						</select>
 						<label>to</label>
+					</div>
+				</div>
+				<div class="row">
+					<div class="input-field col s3">
+						<input id="linear_left_label" type="text" class="validate">
+						<label for="linear_left_label">Left Label</label>
+					</div>
+					<div class="input-field col s3">
+						<input id="linear_right_label" type="text" class="validate">
+						<label for="linear_right_label">Right Label</label>
 					</div>
 				</div>
 			</div>
