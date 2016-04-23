@@ -40,8 +40,47 @@ class Simple_Survey_Manager_Admin_Interface {
 		$survey = SSM_Model_Surveys::get_by_wp_id($survey_id);
 		$questions = SSM_Model_Questions::get_all_for_survey_id($survey->survey_id);
 		?>
-		<link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url( __FILE__ ) . 'css/materialize.min.css'; ?>">
-		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url( __FILE__ ) . 'css/materialize.min.css'; ?>">		
+		<style type="text/css">
+			@font-face {
+				font-family: 'Material Icons';
+				font-style: normal;
+				font-weight: 400;
+				src: local('Material Icons'), local('MaterialIcons-Regular'), url(<?php echo plugin_dir_url( __FILE__ ) . 'font/material-design-icons/MaterialIcons-Regular.woff2'; ?>) format('woff2');
+			}
+
+			.material-icons {
+				font-family: 'Material Icons';
+				font-weight: normal;
+				font-style: normal;
+				font-size: 24px;
+				line-height: 1;
+				letter-spacing: normal;
+				text-transform: none;
+				display: inline-block;
+				white-space: nowrap;
+				word-wrap: normal;
+				direction: ltr;
+				-webkit-font-feature-settings: 'liga';
+				-webkit-font-smoothing: antialiased;
+			}
+			.tableContainer {
+				display: table;
+				align: center;
+				width: 80%;
+				margin: 0 auto; 
+			}
+			.tableRow  {
+				display: table-row;
+			}
+			.tableLeft, .tableRight, .tableMiddle {
+				display: table-cell;
+			}
+			.tableLeft p, .tableRight p, .tableMiddle p {
+				margin: 1px 1px;
+				padding-left: 8px;
+			}
+		</style>
 		<script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/materialize.min.js'; ?>"></script>
 		<script>
 			jQuery(document).ready(function() {
@@ -50,7 +89,7 @@ class Simple_Survey_Manager_Admin_Interface {
 					createQuestion(this['question_type'], this['question_name'], this['required'], JSON.parse(this['answer_array']));
 				});
 				jQuery('#question-card-container select').material_select();
-			    jQuery('#question-card-container select').on("change", function() {
+			    jQuery('#question_type_select').on("change", function() {
 			    	changeQuestionType(jQuery(this).parents('.card'), jQuery(this).val());
 			    });
 			    
@@ -66,6 +105,93 @@ class Simple_Survey_Manager_Admin_Interface {
 
 				resetAddMultipleChoiceHandler();
 			});
+			
+			function generateLinearScale(container, start, end, leftHeading, rightHeading)
+			{
+				container.empty();
+				if(typeof start === 'undefined') { start = 1; }
+				if(typeof end === 'undefined') { end = 5; }
+				if(typeof leftHeading === 'undefined') { leftHeading = ""; }
+				if(typeof rightHeading === 'undefined') { rightHeading = ""; }
+				
+				var tableContainer = jQuery('<div/>', {
+					'class':'tableContainer',
+				});
+				
+				var topRow = jQuery('<div/>', {
+					'class':'tableRow',
+				}).appendTo(tableContainer);
+				
+				var bottomRow = jQuery('<div/>', {
+					'class':'tableRow',
+				}).appendTo(tableContainer);
+				
+				jQuery('<div/>', {
+					'class':'tableRight',
+				}).appendTo(topRow);
+				
+				for(var i = start; i <= end; i++)
+				{
+					var d = jQuery('<div/>', {
+						'class':'tableRight',
+					}).appendTo(topRow);
+					jQuery('<p/>', {
+						'text': i,
+					}).appendTo(d);
+				}
+				
+				jQuery('<div/>', {
+					'class':'tableRight',
+				}).appendTo(topRow);
+				
+				var leftDiv = jQuery('<div/>', {
+					'class':'tableRight',
+				}).appendTo(bottomRow);
+				jQuery('<p/>', {
+					'text': leftHeading,
+				}).appendTo(leftDiv);
+				
+				for(var i = start; i <= end; i++)
+				{
+					var d = jQuery('<div/>', {
+						'class':'tableRight',
+					}).appendTo(bottomRow);
+					jQuery('<input/>', {
+						'type': 'radio',
+						'name': 'linearRadio',
+						'id': 'linearRadio_' + i,
+						'disabled': 'disabled',
+					}).appendTo(d);
+					jQuery('<label/>', {
+						'for': 'linearRadio_' + i,
+						'text': '',
+					}).appendTo(d);
+				}
+				
+				var rightDiv = jQuery('<div/>', {
+					'class':'tableRight',
+				}).appendTo(bottomRow);
+				jQuery('<p/>', {
+					'text': rightHeading,
+				}).appendTo(rightDiv);
+				
+				tableContainer.appendTo(container);
+			}
+			
+			function resetLinearScaleHandlers()
+			{
+				jQuery('#linear_start_select').off('change');
+				jQuery('#linear_start_select').on('change', function() {
+					var answersDiv = jQuery(this).parents('.card-content').find('.answers');
+					generateLinearScale(answersDiv, jQuery('#linear_start_select').val(), jQuery('#linear_end_select').val());
+				});
+				
+				jQuery('#linear_end_select').off('change');
+				jQuery('#linear_end_select').on('change', function() {
+					var answersDiv = jQuery(this).parents('.card-content').find('.answers');
+					generateLinearScale(answersDiv, jQuery('#linear_start_select').val(), jQuery('#linear_end_select').val());
+				});
+			}
 			
 			function resetAddMultipleChoiceHandler()
 			{
@@ -125,15 +251,20 @@ class Simple_Survey_Manager_Admin_Interface {
 
 			function changeQuestionType(e, t)
 			{
-				jQuery('#question-card-container select').off("change");
+				jQuery('#question_type_select').off("change");
 				e.find(".card-content").empty();
 				jQuery("#question-type-"+t).clone().attr("id", "").appendTo(e.find(".card-content"));
-				e.find(".card-content select").material_select();				
-				jQuery('#question-card-container select').on("change", function() {
+				e.find(".card-content select").material_select();
+				if(t === "6")
+				{
+					generateLinearScale(e.find('.answers'));
+				}
+				jQuery('#question_type_select').on("change", function() {
 					changeQuestionType(jQuery(this).parents('.card'), jQuery(this).val());
 			    });
 			    updateQuestionNumbers();
 				resetAddMultipleChoiceHandler();
+				resetLinearScaleHandlers();
 			}
 
 			function updateQuestionNumbers()
@@ -337,6 +468,50 @@ class Simple_Survey_Manager_Admin_Interface {
 			    	<a href="#" class="add_multiple_choice_answer">Add Option</a>
 			    </div>
         	</div>
+			<div class="col s12" id="question-type-6">
+      			<div class="row">
+        			<div class="input-field col s9">
+          				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="question" type="text" class="validate">
+        			</div>
+        			<div class="input-field col s3">
+	        			<select id="question_type_select">
+					      <option value="1">Short Answer</option>
+					      <option value="2">Paragraph</option>
+					      <option value="3">Multiple Choice</option>
+					      <option value="4">Checkboxes</option>
+					      <option value="5">Dropdown</option>
+					      <option value="6" selected>Linear Scale</option>
+					      <option value="7">Date</option>
+					      <option value="8">Time</option>
+					    </select>
+        			</div>
+      			</div>
+      			<div class="answers">
+				</div>
+				<div class="row">
+					<div class="input-field col s2">
+						<select id="linear_start_select">
+							<option value="0">0</option>
+							<option value="1" selected>1</option>
+						</select>
+						<label>from</label>
+					</div>					
+					<div class="input-field col s2">						
+						<select id="linear_end_select">
+							<option value="2">2</option>
+							<option value="3">3</option>
+							<option value="4">4</option>
+							<option value="5" selected>5</option>
+							<option value="6">6</option>
+							<option value="7">7</option>
+							<option value="8">8</option>
+							<option value="9">9</option>
+							<option value="10">10</option>
+						</select>
+						<label>to</label>
+					</div>
+				</div>
+			</div>
 	    </div>
 		<?php
 	}
