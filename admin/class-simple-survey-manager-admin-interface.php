@@ -89,7 +89,7 @@ class Simple_Survey_Manager_Admin_Interface {
 					createQuestion(this['question_type'], this['question_name'], this['required'], JSON.parse(this['answer_array']));
 				});
 				jQuery('#question-card-container select').material_select();
-			    jQuery('#question_type_select').on("change", function() {
+			    jQuery('.question_type_select').on("change", function() {
 			    	changeQuestionType(jQuery(this).parents('.card'), jQuery(this).val());
 			    });
 			    
@@ -263,7 +263,7 @@ class Simple_Survey_Manager_Admin_Interface {
 
 			function changeQuestionType(e, t)
 			{
-				jQuery('#question_type_select').off("change");
+				jQuery('.question_type_select').off("change");
 				e.find(".card-content").empty();
 				jQuery("#question-type-"+t).clone().attr("id", "").appendTo(e.find(".card-content"));
 				e.find(".card-content select").material_select();
@@ -271,7 +271,7 @@ class Simple_Survey_Manager_Admin_Interface {
 				{
 					generateLinearScale(e.find('.answers'));
 				}
-				jQuery('#question_type_select').on("change", function() {
+				jQuery('.question_type_select').on("change", function() {
 					changeQuestionType(jQuery(this).parents('.card'), jQuery(this).val());
 			    });
 			    updateQuestionNumbers();
@@ -283,7 +283,7 @@ class Simple_Survey_Manager_Admin_Interface {
 			{
 				jQuery("#question-card-container .card").each(function(index) {
 					jQuery(this).find('#question').attr('name', 'question[' + index + ']');
-					jQuery(this).find('#question_type_select').attr('name', 'question_type[' + index + ']');
+					jQuery(this).find('.question_type_select').attr('name', 'question_type[' + index + ']');
 					jQuery(this).find('#question_required').attr('name', 'question_required[' + index + ']');
 					jQuery(this).find('.given_answer').each(function(answer_index) {
 						jQuery(this).attr('name', 'given_answer[' + index + '][' + answer_index + ']');
@@ -342,7 +342,7 @@ class Simple_Survey_Manager_Admin_Interface {
           				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="question" type="text" class="validate">
         			</div>
         			<div class="input-field col s3">
-	        			<select id="question_type_select">
+	        			<select class="question_type_select">
 					      <option value="1">Short Answer</option>
 					      <option value="2">Paragraph</option>
 					      <option value="3" selected>Multiple Choice</option>
@@ -374,7 +374,7 @@ class Simple_Survey_Manager_Admin_Interface {
           				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="question" type="text" class="validate">
         			</div>
         			<div class="input-field col s3">
-	        			<select id="question_type_select">
+	        			<select class="question_type_select">
 					      <option value="1" selected>Short Answer</option>
 					      <option value="2">Paragraph</option>
 					      <option value="3">Multiple Choice</option>
@@ -398,7 +398,7 @@ class Simple_Survey_Manager_Admin_Interface {
           				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="question" type="text" class="validate">
         			</div>
         			<div class="input-field col s3">
-	        			<select id="question_type_select">
+	        			<select class="question_type_select">
 					      <option value="1">Short Answer</option>
 					      <option value="2" selected>Paragraph</option>
 					      <option value="3">Multiple Choice</option>
@@ -422,7 +422,7 @@ class Simple_Survey_Manager_Admin_Interface {
           				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="question" type="text" class="validate">
         			</div>
         			<div class="input-field col s3">
-	        			<select id="question_type_select">
+	        			<select class="question_type_select">
 					      <option value="1">Short Answer</option>
 					      <option value="2">Paragraph</option>
 					      <option value="3">Multiple Choice</option>
@@ -454,7 +454,7 @@ class Simple_Survey_Manager_Admin_Interface {
           				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="question" type="text" class="validate">
         			</div>
         			<div class="input-field col s3">
-	        			<select id="question_type_select">
+	        			<select class="question_type_select">
 					      <option value="1">Short Answer</option>
 					      <option value="2">Paragraph</option>
 					      <option value="3">Multiple Choice</option>
@@ -486,7 +486,7 @@ class Simple_Survey_Manager_Admin_Interface {
           				<input style="font-size: 12pt; line-height: 12pt;" placeholder="Question" id="question" type="text" class="validate">
         			</div>
         			<div class="input-field col s3">
-	        			<select id="question_type_select">
+	        			<select class="question_type_select">
 					      <option value="1">Short Answer</option>
 					      <option value="2">Paragraph</option>
 					      <option value="3">Multiple Choice</option>
