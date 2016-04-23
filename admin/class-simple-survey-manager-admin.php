@@ -183,17 +183,39 @@ class Simple_Survey_Manager_Admin {
 		$i = 0;
         foreach($_POST['question'] as $question)
         {
-        	SSM_Model_Questions::insert(
-				array( 
-					'survey_id' => $survey_id, 
-					'question_name' => sanitize_text_field($question), 
-					'question_order' => $i,
-					'question_type' => sanitize_text_field($_POST['question_type'][$i]),
-					'deleted' => 0,
-					'required' => isset($_POST['question_required'][$i]),
-					'answer_array' => json_encode($_POST['given_answer'][$i]),
-				) 
-			);
+			if(intval($_POST['question_type'][$i]) != 6)
+			{
+				SSM_Model_Questions::insert(
+					array( 
+						'survey_id' => $survey_id, 
+						'question_name' => sanitize_text_field($question), 
+						'question_order' => $i,
+						'question_type' => sanitize_text_field($_POST['question_type'][$i]),
+						'deleted' => 0,
+						'required' => isset($_POST['question_required'][$i]),
+						'answer_array' => json_encode($_POST['given_answer'][$i]),
+					) 
+				);
+			} else {
+				SSM_Model_Questions::insert(
+					array( 
+						'survey_id' => $survey_id, 
+						'question_name' => sanitize_text_field($question), 
+						'question_order' => $i,
+						'question_type' => sanitize_text_field($_POST['question_type'][$i]),
+						'deleted' => 0,
+						'required' => isset($_POST['question_required'][$i]),
+						'answer_array' => json_encode(
+							array(
+								'start_number' => sanitize_text_field($_POST['linear_start_select'][$i]),
+								'end_number' => sanitize_text_field($_POST['linear_end_select'][$i]),
+								'left_label' => sanitize_text_field($_POST['linear_left_label'][$i]),
+								'right_label' => sanitize_text_field($_POST['linear_right_label'][$i]),
+							)),
+					) 
+				);
+			}
+
 			$i = $i + 1;
         }
 
