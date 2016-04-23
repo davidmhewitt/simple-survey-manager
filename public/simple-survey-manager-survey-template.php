@@ -91,6 +91,9 @@ get_header(); ?>
                    window.scrollTo(0, 0);
                 },
                 focusInvalid: false,
+                onfocusout: false,
+                onclick: false,
+                onkeyup: false,
             });
         </script>
 
@@ -127,7 +130,7 @@ get_header(); ?>
                 $i = 0;
                 foreach($answers as $answer)
                 {
-                    echo "<input type=\"checkbox\" name=\"answer[" . $order . "][]\" value=\"". $i ."\">". $answer ."<br>";
+                    echo "<input type=\"checkbox\" name=\"answer[" . $order . "][]\" value=\"". $i ."\" ". $required_string. ">". $answer ."<br>";
                     $i++;              
                 }
                 break;
@@ -137,7 +140,7 @@ get_header(); ?>
                 echo "<select name=\"answer[" . $order . "]\">";
                 foreach($answers as $answer)
                 {
-                    echo "<option value=\"". $i ."\">". $answer ."</option>";
+                    echo "<option value=\"". $i ."\" ". $required_string. ">". $answer ."</option>";
                     $i++;              
                 }
                 echo "</select>";
