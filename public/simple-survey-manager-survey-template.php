@@ -1,4 +1,11 @@
 <?php
+    if( isset( $_POST['submitSurvey'] ) )
+    {
+        // We know the survey has been answered at this point
+    } 
+?>
+
+<?php
 get_header(); ?>
 <style type="text/css">
     .tableContainer {
@@ -20,7 +27,7 @@ get_header(); ?>
 
 <div id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">
-		<?php
+        <?php
             $survey_id = get_the_ID();
 		    $survey_description = get_post_meta($survey_id, 'survey_description', true);
             
@@ -33,6 +40,7 @@ get_header(); ?>
         <h1><?php single_post_title(); ?> </h1>
         <?php echo $survey_description; ?>
         
+        <form action="" id="contactForm" method="POST" enctype="multipart/form-data">
         <?php
             foreach($questions as $question)
             {
@@ -41,6 +49,9 @@ get_header(); ?>
                 createQuestionForm($question->question_type, $question->question_order, $question->answer_array);
             }
         ?>
+        <br/><br/>
+        <input type="submit" name="submitSurvey"/>
+        </form>
 
 	</main><!-- .site-main -->
 
