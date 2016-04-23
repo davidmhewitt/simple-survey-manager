@@ -243,9 +243,20 @@ class Simple_Survey_Manager_Admin_Interface {
 				changeQuestionType(newQ, type);
 				newQ.find("#question").val(question_text);
 				newQ.find("#question_required").prop("checked", required == '0' ? false : true);
-				jQuery.each(given_answers, function() {
-					addMultipleChoiceAnswer(newQ.find("#question"), this)
-				});
+				if(type != 6)
+				{
+					jQuery.each(given_answers, function() {
+						addMultipleChoiceAnswer(newQ.find("#question"), this)
+					});
+				} else {
+					newQ.find('#linear_start_select').removeAttr('selected');
+					newQ.find('#linear_end_select').removeAttr('selected');
+					newQ.find('#linear_start_select option[value="' + given_answers['start_number'] + '"]').prop('selected', true);
+					newQ.find('#linear_end_select option[value="' + given_answers['end_number'] + '"]').prop('selected', true);
+					newQ.find('#linear_left_label').val(given_answers['left_label']);
+					newQ.find('#linear_right_label').val(given_answers['right_label']);
+					newQ.find('#linear_end_select').change();
+				}				
 				resetDeleteEventHandler();
 				resetAddMultipleChoiceHandler();
 			}
