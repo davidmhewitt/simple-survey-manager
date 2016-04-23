@@ -288,6 +288,10 @@ class Simple_Survey_Manager_Admin_Interface {
 					jQuery(this).find('.given_answer').each(function(answer_index) {
 						jQuery(this).attr('name', 'given_answer[' + index + '][' + answer_index + ']');
 					});
+					jQuery(this).find('#linear_start_select').attr('name', 'linear_start_select[' + index + ']');
+					jQuery(this).find('#linear_end_select').attr('name', 'linear_end_select[' + index + ']');
+					jQuery(this).find('#linear_left_label').attr('name', 'linear_left_label[' + index + ']');
+					jQuery(this).find('#linear_right_label').attr('name', 'linear_right_label[' + index + ']');
 				});
 			}
 
