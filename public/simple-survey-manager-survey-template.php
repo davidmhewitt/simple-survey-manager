@@ -1,5 +1,22 @@
 <?php
 get_header(); ?>
+<style type="text/css">
+    .tableContainer {
+        display: table;
+        align: center;
+        width: 80%;
+        margin: 0 auto; 
+    }
+    .tableRow  {
+        display: table-row;
+    }
+    .tableLeft, .tableRight, .tableMiddle {
+        display: table-cell;
+    }
+    .tableLeft p, .tableRight p, .tableMiddle p {
+        margin: 1px 1px;
+    }
+</style>
 
 <div id="primary" class="content-area">
 	<main id="main" class="site-main" role="main">
@@ -71,6 +88,37 @@ get_header(); ?>
                     $i++;              
                 }
                 echo "</select>";
+                break;
+             case 6:
+                $answers = json_decode($answers);
+                echo '<div class="tableContainer">';
+                echo '<div class="tableRow">';
+                echo '<div class="tableRight">';
+                echo '</div>';
+                for($i = $answers->start_number; $i <= $answers->end_number; $i++)
+                {
+                    echo '<div class="tableRight">';
+                    echo '<p>'. $i. '</p>';
+                    echo '</div>';
+                }
+                echo '<div class="tableRight">';
+                echo '</div>';
+                echo '</div>';
+                echo '<div class="tableRow">';
+                echo '<div class="tableRight">';
+                echo '<p>'. $answers->left_label . '</p>';
+                echo '</div>';
+                for($i = $answers->start_number; $i <= $answers->end_number; $i++)
+                {
+                    echo '<div class="tableRight">';
+                    echo '<input type="radio" name="answer[' . $order . ']" value="'. $i .'" />';
+                    echo '</div>';
+                }
+                echo '<div class="tableRight">';
+                echo '<p>'. $answers->right_label . '</p>';
+                echo '</div>';
+                echo '</div>';
+                echo '</div>';
                 break;
             default:
                 break;
