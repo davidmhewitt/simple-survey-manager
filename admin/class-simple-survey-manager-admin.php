@@ -131,6 +131,15 @@ class Simple_Survey_Manager_Admin {
 	    )
 	  );
 	}
+	
+	public function add_results_link($actions, $post)
+	{
+		if ($post->post_type=='ssm_survey')
+		{
+			$actions['results'] = '<a href="#" title="" rel="permalink">View Results</a>';
+		}
+		return $actions;
+	}
 
 	/**
 	 * Register the custom survey editor for the admin area.
