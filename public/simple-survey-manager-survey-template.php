@@ -1,7 +1,33 @@
 <?php
     if( isset( $_POST['submitSurvey'] ) )
     {
-        // We know the survey has been answered at this point
+        require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-survey-manager-db-model.php';
+        $survey_id = get_the_ID();
+        $survey = SSM_Model_Surveys::get_by_wp_id($survey_id);
+        SSM_Model_Responses::insert(
+            array( 
+                'survey_id' => $survey->survey_id, 
+                'taken' => current_time( 'mysql' ), 
+            ) 
+        );
+        $response_id = SSM_Model_Responses::insert_id();
+        $i = 0;
+        foreach($_POST['answer'] as $answer)
+        {
+            $data = 
+                array(
+                    'response_id' => $response_id,
+                    'question_id' => $i, 
+                );
+            if(is_array($_POST['answer']))
+            {
+                $data['answer'] = json_encode($answer);
+            } else {
+                $data['answer'] = sanitize_text_field($answer);
+            }
+            $i = $i + 1;
+            SSM_Model_Answers::insert($data);
+        }
     } 
 ?>
 

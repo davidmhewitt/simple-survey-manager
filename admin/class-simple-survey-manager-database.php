@@ -35,6 +35,7 @@ class Simple_Survey_Manager_Database {
 
 		$survey_table_name = $wpdb->prefix . "ssm_surveys";
 		$question_table_name = $wpdb->prefix . "ssm_questions";
+		$response_table_name = $wpdb->prefix . "ssm_responses";
 		$answer_table_name = $wpdb->prefix . "ssm_answers";
 
 		if( $wpdb->get_var( "SHOW TABLES LIKE '$survey_table_name'" ) != $survey_table_name ) {
@@ -70,11 +71,23 @@ class Simple_Survey_Manager_Database {
 			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 			dbDelta( $sql );
 		}
+		
+		if( $wpdb->get_var( "SHOW TABLES LIKE '$response_table_name'" ) != $question_table_name ) {
+			$sql = "CREATE TABLE $response_table_name (
+				response_id mediumint(9) NOT NULL AUTO_INCREMENT,
+				survey_id INT NOT NULL,
+				taken DATETIME NOT NULL,
+				PRIMARY KEY  (response_id)
+			) $charset_collate;";
+
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			dbDelta( $sql );
+		}
 
 		if( $wpdb->get_var( "SHOW TABLES LIKE '$answer_table_name'" ) != $answer_table_name ) {
 			$sql = "CREATE TABLE $answer_table_name (
 				answer_id mediumint(9) NOT NULL AUTO_INCREMENT,
-				survey_id INT NOT NULL,
+				response_id INT NOT NULL,
 				question_id INT NOT NULL,
 				answer TEXT NOT NULL,
 				PRIMARY KEY  (answer_id)

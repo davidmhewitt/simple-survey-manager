@@ -72,4 +72,19 @@ class SSM_Model_Questions extends SSM_Model {
         return $wpdb->get_results($sql);
     }
 }
+
+class SSM_Model_Responses extends SSM_Model {
+    static $primary_key = 'response_id';
+
+    static function get_all_for_survey_id($survey_id)
+    {
+        global $wpdb;
+        $sql = sprintf( 'SELECT * FROM %s WHERE survey_id = %s', self::_table(), $survey_id);
+        return $wpdb->get_results($sql);
+    }
+}
+
+class SSM_Model_Answers extends SSM_Model {
+    static $primary_key = 'answer_id';
+}
 ?>
