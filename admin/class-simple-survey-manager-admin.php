@@ -136,10 +136,25 @@ class Simple_Survey_Manager_Admin {
 	{
 		if ($post->post_type=='ssm_survey')
 		{
-			$actions['results'] = '<a href="#" title="" rel="permalink">View Results</a>';
+			$actions['results'] = '<a href="edit.php?post_type=ssm_survey&page=results-shortcode-ref&post_id='.$post->ID.'" title="" rel="permalink">View Results</a>';
 			unset($actions['inline hide-if-no-js']);
 		}
 		return $actions;
+	}
+	
+	public function register_custom_submenu_page()
+	{
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-simple-survey-manager-results-interface.php';
+		$results_interface = new Simple_Survey_Manager_Results_Interface();
+		
+		add_submenu_page(
+			'edit.php?post_type=ssm_survey',
+			'Survey Results',
+			'View Results',
+			'manage_options',
+			'results-shortcode-ref',
+			array($results_interface, 'render_interface')
+    	);
 	}
 
 	/**
