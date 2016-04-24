@@ -82,15 +82,20 @@ class Simple_Survey_Manager_Results_Interface {
 		<script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/materialize.min.js'; ?>"></script>
 		<script>
 			jQuery(document).ready(function() {
+				var results = <?php echo json_encode($responses) ?>;
 				var current_page = 1;
 				var total_pages = <?php echo count($responses); ?>;
-				jQuery('#total_pages').html('of ' + total_pages);
+				
+				populateData();
+				
+				jQuery('#total_pages').html('of ' + total_pages + ' responses');
 				jQuery('#page_left_arrow').click(function() {
 					if(current_page > 1)
 					{
 						current_page--;
 						updatePageArrows();
 						jQuery('#current_page').html(current_page);
+						populateData();
 					}
 				});
 				jQuery('#page_right_arrow').click(function() {
@@ -99,6 +104,7 @@ class Simple_Survey_Manager_Results_Interface {
 						current_page++;
 						updatePageArrows();
 						jQuery('#current_page').html(current_page);
+						populateData();
 					}
 				});
 				
@@ -117,6 +123,11 @@ class Simple_Survey_Manager_Results_Interface {
 						jQuery('#page_left_arrow').removeClass('disabled');
 					}
 				}
+				
+				function populateData()
+				{
+					jQuery('#response_date').text(results[current_page-1].taken);
+				}
 			});
 		</script>
 
@@ -128,8 +139,13 @@ class Simple_Survey_Manager_Results_Interface {
 							<li class="disabled" id="page_left_arrow"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
 							<li class="waves-effect" id="current_page">1</li>
 							<li id="page_right_arrow"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
-							<li id="total_pages">of 10</li>
+							<li id="total_pages"></li>
 						</ul>
+        			</div>
+					<div class="row">
+	        			<div id="response_data">
+							Responded at: <span id="response_date"></span>
+						</div>
         			</div>
 	        	</div>
 	      	</div>
