@@ -36,7 +36,6 @@ class Simple_Survey_Manager_Results_Interface {
 		$survey_id = $_REQUEST['post_id'];		
 
 		$survey = SSM_Model_Surveys::get_by_wp_id($survey_id);
-		$questions = SSM_Model_Questions::get_all_for_survey_id($survey->survey_id);
 		$responses = SSM_Model_Responses::get_all_for_survey_id($survey->survey_id);
 
 		?>
@@ -85,7 +84,6 @@ class Simple_Survey_Manager_Results_Interface {
 		<script>
 			jQuery(document).ready(function() {
 				var results = <?php echo json_encode($responses); ?>;
-				var questions = <?php echo json_encode($questions); ?>;
 				var current_page = 1;
 				var total_pages = <?php echo count($responses); ?>;
 				
@@ -160,7 +158,7 @@ class Simple_Survey_Manager_Results_Interface {
 								var question = JSON.parse(response);
 							
 								var d = jQuery('<div/>', {
-									'id': 'question-' + answer.question_id,
+									'id': question.question_order,
 								});
 								var newQ = jQuery('<h4/>', {
 									'text': question.question_name,
@@ -169,8 +167,16 @@ class Simple_Survey_Manager_Results_Interface {
 									'text': answer.answer,
 								}).appendTo(d);
 								jQuery("#response_data").append(d);
+								
+								jQuery("#response_data div").sort(function(a, b) {
+									return parseInt(a.id) - parseInt(b.id);
+								}).each(function() {
+									var elem = jQuery(this);
+									elem.remove();
+									jQuery(elem).appendTo("#response_data");
+								});
 							});
-						});	
+						});
 					});
 				}
 			});
