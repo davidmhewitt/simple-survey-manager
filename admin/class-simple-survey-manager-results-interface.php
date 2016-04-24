@@ -80,12 +80,56 @@ class Simple_Survey_Manager_Results_Interface {
 			}
 		</style>
 		<script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/materialize.min.js'; ?>"></script>
+		<script>
+			jQuery(document).ready(function() {
+				var current_page = 1;
+				var total_pages = <?php echo count($responses); ?>;
+				jQuery('#total_pages').html('of ' + total_pages);
+				jQuery('#page_left_arrow').click(function() {
+					if(current_page > 1)
+					{
+						current_page--;
+						updatePageArrows();
+						jQuery('#current_page').html(current_page);
+					}
+				});
+				jQuery('#page_right_arrow').click(function() {
+					if(current_page < total_pages)
+					{
+						current_page++;
+						updatePageArrows();
+						jQuery('#current_page').html(current_page);
+					}
+				});
+				
+				function updatePageArrows()
+				{
+					if(current_page == total_pages) {
+						jQuery('#page_right_arrow').addClass('disabled');
+					}							
+					else {
+						jQuery('#page_right_arrow').removeClass('disabled');
+					}
+					if(current_page == 1) {
+						jQuery('#page_left_arrow').addClass('disabled');
+					}							
+					else {
+						jQuery('#page_left_arrow').removeClass('disabled');
+					}
+				}
+			});
+		</script>
 
     	<div class="card" style="max-width: 75%; width: 75%;">
      		<div class="card-content">
         		<div class="col s12">
           			<div class="row">
-	        			<?php print_r($responses) ?>
+	        			<ul class="pagination right">
+							<li class="disabled" id="page_left_arrow"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+							<li class="waves-effect" id="current_page">1</li>
+							<li id="page_right_arrow"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+							<li id="total_pages">of 10</li>
+						</ul>
         			</div>
 	        	</div>
 	      	</div>
