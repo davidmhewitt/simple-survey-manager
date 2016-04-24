@@ -163,8 +163,26 @@ class Simple_Survey_Manager_Results_Interface {
 								var newQ = jQuery('<h4/>', {
 									'text': question.question_name,
 								}).appendTo(d);
+								var given_answers = JSON.parse(question.answer_array);
+								var answerString = ""
+								if(Array.isArray(given_answers))
+								{
+									var checkboxes = JSON.parse(answer.answer);
+									if(Array.isArray(checkboxes))
+									{
+										jQuery.each(checkboxes, function(i, checkbox) {
+											var index = checkbox;
+											answerString += given_answers[index] + ", ";
+										});
+									} else {
+										var index = parseInt(answer.answer.replace('"', ''));
+										answerString = given_answers[index];
+									}									
+								} else {
+									answerString = answer.answer;
+								}
 								var newA = jQuery('<span/>', {
-									'text': answer.answer,
+									'text': answerString,
 								}).appendTo(d);
 								jQuery("#response_data").append(d);
 								
