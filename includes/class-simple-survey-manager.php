@@ -160,6 +160,7 @@ class Simple_Survey_Manager {
 		
 		$this->loader->add_action ('admin_menu', $plugin_admin, 'register_custom_submenu_page');
 		$this->loader->add_action ('wp_ajax_ssm_load_answers', $plugin_admin, 'ajax_load_answers');
+		$this->loader->add_action ('wp_ajax_ssm_load_question', $plugin_admin, 'ajax_load_question');
 		
 		$this->loader->add_filter( 'post_row_actions', $plugin_admin, 'add_results_link', 10, 2);
 

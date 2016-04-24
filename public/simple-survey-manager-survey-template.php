@@ -20,7 +20,7 @@
             $data = 
                 array(
                     'response_id' => $response_id,
-                    'question_id' => $i, 
+                    'question_id' => sanitize_text_field($_POST['question_id'][$i]), 
                 );
             if(is_array($_POST['answer']))
             {
@@ -77,6 +77,7 @@ get_header(); ?>
                 $required_string = $question->required != '0' ? "&nbsp;<span style='color:red;'>*</span>" : "";
                 echo "<h2>" . $question->question_name . $required_string . "</h2>";
                 createQuestionForm($question->question_type, $question->question_order, $question->answer_array, $question->required);
+                echo '<input type="hidden" name="question_id['. $question->question_order .']" value="'. $question->question_id. '"/>'; 
             }
         ?>
         <br/><br/>

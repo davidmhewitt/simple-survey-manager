@@ -127,35 +127,49 @@ class Simple_Survey_Manager_Results_Interface {
 					}
 				}
 				
+				
+				
 				function populateData()
 				{
+					result = results[current_page - 1];
+					
 					jQuery("#response_data").empty();
 					var dateDisplay = jQuery('<span/>', {
-							'text': 'Response at: ' + results[current_page].taken,
+							'text': 'Response at: ' + result.taken,
 						});
 					jQuery("#response_data").append(dateDisplay);
 				
 					
 					var data = {
 						'action': 'ssm_load_answers',
-						'response_id': results[current_page].response_id
+						'response_id': result.response_id
 					};
 
 					// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
 					jQuery.post(ajaxurl, data, function(response) {
 						var answers = JSON.parse(response);
-						console.log(answers);
-						jQuery.each(questions, function(i, question) {
-							var d = jQuery('<div/>', {
-								'id': 'question-' + question.question_order,
-							})
-							var newQ = jQuery('<h4/>', {
-								'text': question.question_name,
-							}).appendTo(d);
-							var newA = jQuery('<span/>', {
-								'text': answers[i].answer,
-							}).appendTo(d);
-							jQuery("#response_data").append(d);
+										
+						jQuery.each(answers, function(i, answer) {
+							
+							var data = {
+								'action': 'ssm_load_question',
+								'question_id': answer.question_id
+							};
+							
+							jQuery.post(ajaxurl, data, function(response) {
+								var question = JSON.parse(response);
+							
+								var d = jQuery('<div/>', {
+									'id': 'question-' + answer.question_id,
+								});
+								var newQ = jQuery('<h4/>', {
+									'text': question.question_name,
+								}).appendTo(d);
+								var newA = jQuery('<span/>', {
+									'text': answer.answer,
+								}).appendTo(d);
+								jQuery("#response_data").append(d);
+							});
 						});	
 					});
 				}
