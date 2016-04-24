@@ -31,12 +31,14 @@ class Simple_Survey_Manager_Results_Interface {
 	 * @since    1.0.0
 	 */
 	public static function render_interface() {
-		$survey_id = $_REQUEST['post_id'];
-
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-survey-manager-db-model.php';
+		
+		$survey_id = $_REQUEST['post_id'];		
 
 		$survey = SSM_Model_Surveys::get_by_wp_id($survey_id);
+		$questions = SSM_Model_Questions::get_all_for_survey_id($survey->survey_id);
 		$responses = SSM_Model_Responses::get_all_for_survey_id($survey->survey_id);
+
 		?>
 		<link rel="stylesheet" type="text/css" href="<?php echo plugin_dir_url( __FILE__ ) . 'css/materialize.min.css'; ?>">		
 		<style type="text/css">
@@ -82,7 +84,8 @@ class Simple_Survey_Manager_Results_Interface {
 		<script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/materialize.min.js'; ?>"></script>
 		<script>
 			jQuery(document).ready(function() {
-				var results = <?php echo json_encode($responses) ?>;
+				var results = <?php echo json_encode($responses); ?>;
+				var questions = <?php echo json_encode($questions); ?>;
 				var current_page = 1;
 				var total_pages = <?php echo count($responses); ?>;
 				
@@ -126,7 +129,35 @@ class Simple_Survey_Manager_Results_Interface {
 				
 				function populateData()
 				{
-					jQuery('#response_date').text(results[current_page-1].taken);
+					jQuery("#response_data").empty();
+					var dateDisplay = jQuery('<span/>', {
+							'text': 'Response at: ' + results[current_page].taken,
+						});
+					jQuery("#response_data").append(dateDisplay);
+				
+					
+					var data = {
+						'action': 'ssm_load_answers',
+						'response_id': results[current_page].response_id
+					};
+
+					// since 2.8 ajaxurl is always defined in the admin header and points to admin-ajax.php
+					jQuery.post(ajaxurl, data, function(response) {
+						var answers = JSON.parse(response);
+						console.log(answers);
+						jQuery.each(questions, function(i, question) {
+							var d = jQuery('<div/>', {
+								'id': 'question-' + question.question_order,
+							})
+							var newQ = jQuery('<h4/>', {
+								'text': question.question_name,
+							}).appendTo(d);
+							var newA = jQuery('<span/>', {
+								'text': answers[i].answer,
+							}).appendTo(d);
+							jQuery("#response_data").append(d);
+						});	
+					});
 				}
 			});
 		</script>
@@ -144,7 +175,6 @@ class Simple_Survey_Manager_Results_Interface {
         			</div>
 					<div class="row">
 	        			<div id="response_data">
-							Responded at: <span id="response_date"></span>
 						</div>
         			</div>
 	        	</div>

@@ -86,5 +86,12 @@ class SSM_Model_Responses extends SSM_Model {
 
 class SSM_Model_Answers extends SSM_Model {
     static $primary_key = 'answer_id';
+    
+    static function get_all_for_response_id($response_id)
+    {
+        global $wpdb;
+        $sql = sprintf( 'SELECT * FROM %s WHERE response_id = %s', self::_table(), $response_id);
+        return $wpdb->get_results($sql);
+    }
 }
 ?>

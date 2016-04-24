@@ -142,6 +142,15 @@ class Simple_Survey_Manager_Admin {
 		return $actions;
 	}
 	
+	public function ajax_load_answers()
+	{
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-survey-manager-db-model.php';
+		$response_id = $_POST['response_id'];
+		$answers = SSM_Model_Answers::get_all_for_response_id($response_id);
+		echo json_encode($answers);
+		wp_die();
+	}
+	
 	public function register_custom_submenu_page()
 	{
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'admin/class-simple-survey-manager-results-interface.php';
