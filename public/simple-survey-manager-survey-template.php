@@ -79,9 +79,11 @@ get_header(); ?>
             foreach($questions as $question)
             {
                 $required_string = $question->required != '0' ? "&nbsp;<span style='color:red;'>*</span>" : "";
+                echo '<p>';
                 echo "<h2>" . $question->question_name . $required_string . "</h2>";
                 createQuestionForm($question->question_type, $question->question_order, $question->answer_array, $question->required);
                 echo '<input type="hidden" name="question_id['. $question->question_order .']" value="'. $question->question_id. '"/>'; 
+                echo '</p>';
             }
         ?>
         <br/><br/>
