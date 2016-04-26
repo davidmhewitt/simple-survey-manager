@@ -58,6 +58,10 @@ get_header(); ?>
 	<main id="main" class="site-main" role="main">
         <?php
             $survey_id = get_the_ID();
+            if(post_password_required( $survey_id ))
+            {
+                echo get_the_password_form();
+            } else { 
 		    $survey_description = get_post_meta($survey_id, 'survey_description', true);
             
             require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-survey-manager-db-model.php';
@@ -97,7 +101,9 @@ get_header(); ?>
                 onkeyup: false,
             });
         </script>
-
+        <?php
+        }
+        ?>
 	</main><!-- .site-main -->
 
 </div><!-- .content-area -->

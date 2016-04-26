@@ -160,7 +160,7 @@ class Simple_Survey_Manager_Results_Interface {
 								var d = jQuery('<div/>', {
 									'id': question.question_order,
 								});
-								var newQ = jQuery('<h4/>', {
+								var newQ = jQuery('<h5/>', {
 									'text': question.question_name,
 								}).appendTo(d);
 								var given_answers = JSON.parse(question.answer_array);
