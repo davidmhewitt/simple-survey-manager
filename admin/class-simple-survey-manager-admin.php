@@ -169,7 +169,7 @@ class Simple_Survey_Manager_Admin {
 			'edit.php?post_type=ssm_survey',
 			'Survey Results',
 			'View Results',
-			'manage_options',
+			'edit_posts',
 			'results-shortcode-ref',
 			array($results_interface, 'render_interface')
     	);
