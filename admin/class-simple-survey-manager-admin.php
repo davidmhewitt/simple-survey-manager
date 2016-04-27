@@ -154,7 +154,7 @@ class Simple_Survey_Manager_Admin {
 	public function ajax_load_question()
 	{
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-survey-manager-db-model.php';
-		$question_id = sanitize_text_field($_POST['question_id']);
+		$question_id = $_POST['question_id'];
 		$question = SSM_Model_Questions::get($question_id);
 		echo json_encode($question);
 		wp_die();
@@ -196,15 +196,15 @@ class Simple_Survey_Manager_Admin {
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-survey-manager-db-model.php';
 
         remove_action( 'save_post_ssm_survey', Array($this, 'save_survey_hook'));
-        $survey_title = $this->sanitized_text('survey_title');
+        $survey_title = $_POST['survey_title'];
         wp_update_post( array( 'ID' => $post_id, 'post_title' => $survey_title ) );
-        update_post_meta($post_id, 'survey_description', $this->sanitized_text('survey_description'));
+        update_post_meta($post_id, 'survey_description', $_POST['survey_description']);
 
 		$current_user = wp_get_current_user();
 
 		$data = 
 			array(
-				'survey_name' => $this->sanitized_text('survey_title'), 
+				'survey_name' => $_POST['survey_title'], 
 				'last_activity' => current_time( 'mysql' ), 
 				'require_log_in' => 0, 
 				'user' => $current_user->user_login,
@@ -231,9 +231,9 @@ class Simple_Survey_Manager_Admin {
 				SSM_Model_Questions::insert(
 					array( 
 						'survey_id' => $survey_id, 
-						'question_name' => sanitize_text_field($question), 
+						'question_name' => $question, 
 						'question_order' => $i,
-						'question_type' => sanitize_text_field($_POST['question_type'][$i]),
+						'question_type' => $_POST['question_type'][$i],
 						'deleted' => 0,
 						'required' => isset($_POST['question_required'][$i]),
 						'answer_array' => json_encode($_POST['given_answer'][$i]),
@@ -243,17 +243,17 @@ class Simple_Survey_Manager_Admin {
 				SSM_Model_Questions::insert(
 					array( 
 						'survey_id' => $survey_id, 
-						'question_name' => sanitize_text_field($question), 
+						'question_name' => $question, 
 						'question_order' => $i,
-						'question_type' => sanitize_text_field($_POST['question_type'][$i]),
+						'question_type' => $_POST['question_type'][$i],
 						'deleted' => 0,
 						'required' => isset($_POST['question_required'][$i]),
 						'answer_array' => json_encode(
 							array(
-								'start_number' => sanitize_text_field($_POST['linear_start_select'][$i]),
-								'end_number' => sanitize_text_field($_POST['linear_end_select'][$i]),
-								'left_label' => sanitize_text_field($_POST['linear_left_label'][$i]),
-								'right_label' => sanitize_text_field($_POST['linear_right_label'][$i]),
+								'start_number' => $_POST['linear_start_select'][$i],
+								'end_number' => $_POST['linear_end_select'][$i],
+								'left_label' => $_POST['linear_left_label'][$i],
+								'right_label' => $_POST['linear_right_label'][$i],
 							)),
 					) 
 				);
@@ -265,12 +265,4 @@ class Simple_Survey_Manager_Admin {
         add_action( 'save_post_ssm_survey', Array($this, 'save_survey_hook'));
 
 	}
-
-	private function sanitized_text ( $id ) {
-        $data = '';
-        if ( isset( $_POST[ $id ] ) ) {
-            $data = $_POST[ $id ];
-        }
-        return sanitize_text_field( $data );
-    }
 }

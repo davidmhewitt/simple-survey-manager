@@ -84,7 +84,8 @@ class Simple_Survey_Manager_Results_Interface {
 		<script>
 			jQuery(document).ready(function() {
 				var results = <?php echo json_encode($responses); ?>;
-				var current_page = 1;
+				var current_page = window.location.hash.slice(1) | 1;
+				jQuery('#current_page').html(current_page);
 				var total_pages = <?php echo count($responses); ?>;
 				
 				populateData();
@@ -97,7 +98,9 @@ class Simple_Survey_Manager_Results_Interface {
 						updatePageArrows();
 						jQuery('#current_page').html(current_page);
 						populateData();
+						window.location.hash = current_page;
 					}
+					return false;
 				});
 				jQuery('#page_right_arrow').click(function() {
 					if(current_page < total_pages)
@@ -106,7 +109,9 @@ class Simple_Survey_Manager_Results_Interface {
 						updatePageArrows();
 						jQuery('#current_page').html(current_page);
 						populateData();
+						window.location.hash = current_page;
 					}
+					return false;
 				});
 				
 				function updatePageArrows()
@@ -124,7 +129,6 @@ class Simple_Survey_Manager_Results_Interface {
 						jQuery('#page_left_arrow').removeClass('disabled');
 					}
 				}
-				
 				
 				
 				function populateData()
@@ -155,8 +159,11 @@ class Simple_Survey_Manager_Results_Interface {
 							};
 							
 							jQuery.post(ajaxurl, data, function(response) {
+								if(answer.response_id != results[current_page -1].response_id)
+									return;
+									
 								var question = JSON.parse(response);
-							
+														
 								var d = jQuery('<div/>', {
 									'id': question.question_order,
 								});
@@ -181,8 +188,15 @@ class Simple_Survey_Manager_Results_Interface {
 								} else {
 									answerString = answer.answer;
 								}
+								answerString = answerString.replace(/</g, "&lt;")
+								answerString = answerString.replace(/\\r\\n/g, "<br />");
+								answerString = answerString.replace(/\\\\\\"/g, "&quot;");
+								answerString = answerString.replace(/\\\//g, "/");
+								if(answerString[0] == '"' && answerString[answerString.length - 1] == '"')
+									answerString = answerString.slice(1, -1);
+								console.log(answerString);
 								var newA = jQuery('<span/>', {
-									'text': answerString,
+									'html': answerString,
 								}).appendTo(d);
 								jQuery("#response_data").append(d);
 								
@@ -205,10 +219,11 @@ class Simple_Survey_Manager_Results_Interface {
         		<div class="col s12">
           			<div class="row">
 	        			<ul class="pagination right">
-							<li class="disabled" id="page_left_arrow"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
+							<li class="disabled" id="page_left_arrow"><a href="#"><i class="material-icons">chevron_left</i></a></li>
 							<li class="waves-effect" id="current_page">1</li>
-							<li id="page_right_arrow"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
+							<li id="page_right_arrow"><a href="#"><i class="material-icons">chevron_right</i></a></li>
 							<li id="total_pages"></li>
+							<li id="print" style="cursor:pointer;" onclick="window.print();"><i class="material-icons">print</i></li>
 						</ul>
         			</div>
 					<div class="row">

@@ -20,13 +20,13 @@
             $data = 
                 array(
                     'response_id' => $response_id,
-                    'question_id' => sanitize_text_field($_POST['question_id'][$i]), 
+                    'question_id' => $_POST['question_id'][$i], 
                 );
             if(is_array($_POST['answer']))
             {
                 $data['answer'] = json_encode($answer);
             } else {
-                $data['answer'] = sanitize_text_field($answer);
+                $data['answer'] = $answer;
             }
             $i = $i + 1;
             SSM_Model_Answers::insert($data);
