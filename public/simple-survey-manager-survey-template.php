@@ -1,4 +1,15 @@
 <?php
+    if(isset($_REQUEST['completed']))
+    {
+        $pass_cookie='';
+        foreach($_COOKIE as $key=>$value){
+            if(!strncmp($key,"wp-postpass_",12)){
+                $pass_cookie = $key;
+                setcookie($pass_cookie,null,-1,'/');
+            }
+        }
+    }
+    
     wp_register_script( 'jquery-validate-script', plugin_dir_url( __FILE__ ) . 'js/jquery.validate.min.js' ,array( 'jquery'));
     wp_enqueue_script( 'jquery-validate-script' );
 
@@ -75,7 +86,7 @@ get_header(); ?>
         <h1><?php single_post_title(); ?> </h1>
         <?php if(isset($_REQUEST['completed']))
         {
-            echo "Thank you for completing the survey. You may now close this tab.";
+           echo "Thank you for completing the survey. You may now close this tab.";
         } else {
         ?>
         <?php echo $survey_description; ?>
