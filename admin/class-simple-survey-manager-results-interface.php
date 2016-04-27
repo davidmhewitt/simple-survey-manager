@@ -79,6 +79,16 @@ class Simple_Survey_Manager_Results_Interface {
 				margin: 1px 1px;
 				padding-left: 8px;
 			}
+
+		</style>
+		<style media="print">
+			#adminmenumain { display:none }
+			#wpcontent{ margin-left:0; 
+				float:none; 
+				width:auto }
+			#wpfooter { display: none }
+			.card { max-width:100% !important; width: 100% !important; }
+			h5 { font-size: 125%; background: #e0e0e0; }
 		</style>
 		<script src="<?php echo plugin_dir_url( __FILE__ ) . 'js/materialize.min.js'; ?>"></script>
 		<script>
@@ -164,11 +174,13 @@ class Simple_Survey_Manager_Results_Interface {
 									
 								var question = JSON.parse(response);
 														
-								var d = jQuery('<div/>', {
+								var d = jQuery('<p/>', {
 									'id': question.question_order,
+									'style': 'margin-bottom: 25px;'
 								});
 								var newQ = jQuery('<h5/>', {
 									'text': question.question_name,
+									'style': 'background: #e0e0e0;',
 								}).appendTo(d);
 								var given_answers = JSON.parse(question.answer_array);
 								var answerString = ""
@@ -200,7 +212,7 @@ class Simple_Survey_Manager_Results_Interface {
 								}).appendTo(d);
 								jQuery("#response_data").append(d);
 								
-								jQuery("#response_data div").sort(function(a, b) {
+								jQuery("#response_data > p").sort(function(a, b) {
 									return parseInt(a.id) - parseInt(b.id);
 								}).each(function() {
 									var elem = jQuery(this);
@@ -226,6 +238,7 @@ class Simple_Survey_Manager_Results_Interface {
 							<li id="print" style="cursor:pointer;" onclick="window.print();"><i class="material-icons">print</i></li>
 						</ul>
         			</div>
+					<h4><?php echo $survey->survey_name; ?></h4>
 					<div class="row">
 	        			<div id="response_data">
 						</div>
