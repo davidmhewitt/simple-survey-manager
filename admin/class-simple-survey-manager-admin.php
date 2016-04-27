@@ -192,8 +192,6 @@ class Simple_Survey_Manager_Admin {
 		if(wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) return;
 
         if ( ! current_user_can( 'edit_posts' ) ) return;
-		
-		if ( !isset($_POST['question'])) return;
 
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-survey-manager-db-model.php';
 
@@ -201,6 +199,7 @@ class Simple_Survey_Manager_Admin {
         $survey_title = $_POST['survey_title'];
         wp_update_post( array( 'ID' => $post_id, 'post_title' => $survey_title ) );
         update_post_meta($post_id, 'survey_description', $_POST['survey_description']);
+		add_action( 'save_post_ssm_survey', Array($this, 'save_survey_hook'));
 
 		$current_user = wp_get_current_user();
 
@@ -225,6 +224,8 @@ class Simple_Survey_Manager_Admin {
     	$survey_id = SSM_Model_Surveys::get_by_wp_id($post_id)->survey_id;
     	SSM_Model_Questions::delete_all_for_survey_id($survey_id);
 
+		if ( !isset($_POST['question'])) return;
+		
 		$i = 0;
         foreach($_POST['question'] as $question)
         {
@@ -263,8 +264,6 @@ class Simple_Survey_Manager_Admin {
 
 			$i = $i + 1;
         }
-
-        add_action( 'save_post_ssm_survey', Array($this, 'save_survey_hook'));
 
 	}
 }
