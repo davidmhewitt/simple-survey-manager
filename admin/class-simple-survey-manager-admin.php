@@ -192,6 +192,8 @@ class Simple_Survey_Manager_Admin {
 		if(wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) return;
 
         if ( ! current_user_can( 'edit_posts' ) ) return;
+		
+		if ( !isset($_POST['question'])) return;
 
         require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-survey-manager-db-model.php';
 

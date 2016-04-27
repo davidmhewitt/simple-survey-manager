@@ -31,6 +31,7 @@
             $i = $i + 1;
             SSM_Model_Answers::insert($data);
         }
+        wp_redirect(get_permalink(). "?completed=true");
     } 
 ?>
 
@@ -72,6 +73,11 @@ get_header(); ?>
         
         <div id="summary" style="color: red;"></div>
         <h1><?php single_post_title(); ?> </h1>
+        <?php if(isset($_REQUEST['completed']))
+        {
+            echo "Thank you for completing the survey. You may now close this tab.";
+        } else {
+        ?>
         <?php echo $survey_description; ?>
 
         <form action="" id="contactForm" method="POST" enctype="multipart/form-data">
@@ -111,6 +117,10 @@ get_header(); ?>
 </div><!-- .content-area -->
 
 <?php get_footer(); ?>
+
+<?php
+            }
+?>
 
 <?php
     function createQuestionForm($type, $order, $answers, $required)

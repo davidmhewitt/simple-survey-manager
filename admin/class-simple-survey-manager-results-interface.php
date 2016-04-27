@@ -36,7 +36,26 @@ class Simple_Survey_Manager_Results_Interface {
 		$survey_id = $_REQUEST['post_id'];
 		if(!isset($survey_id))
 		{
-			echo "No results found";
+			echo "<p>Please select which survey you want to view results for</p>";
+			$type = 'ssm_survey';
+			$args=array(
+				'post_type' => $type,
+				'post_status' => 'publish',
+				'posts_per_page' => -1,
+				'caller_get_posts'=> 1
+			);
+			$my_query = null;
+			$my_query = new WP_Query($args);
+			if( $my_query->have_posts() ) {
+			while ($my_query->have_posts()) : $my_query->the_post(); ?>
+				<p><a href="edit.php?post_type=ssm_survey&page=results-shortcode-ref&post_id=<?php echo get_the_ID() ?>" rel="bookmark" title="Results Link for <?php the_title_attribute(); ?>"><?php the_title(); ?></a></p>
+				<?php
+			endwhile;
+			} else {
+				echo "No results found";
+			}
+			wp_reset_query();
+			
 			return;
 		}
 
