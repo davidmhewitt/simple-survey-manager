@@ -33,7 +33,12 @@ class Simple_Survey_Manager_Results_Interface {
 	public static function render_interface() {
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-simple-survey-manager-db-model.php';
 		
-		$survey_id = $_REQUEST['post_id'];		
+		$survey_id = $_REQUEST['post_id'];
+		if(!isset($survey_id))
+		{
+			echo "No results found";
+			return;
+		}
 
 		$survey = SSM_Model_Surveys::get_by_wp_id($survey_id);
 		$responses = SSM_Model_Responses::get_all_for_survey_id($survey->survey_id);
