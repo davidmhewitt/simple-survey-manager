@@ -275,8 +275,10 @@ class Simple_Survey_Manager_Admin_Interface {
 			function changeQuestionType(e, t)
 			{
 				jQuery('.question_type_select').off("change");
+				var question = e.find("#question").val();
 				e.find(".card-content").empty();
 				jQuery("#question-type-"+t).clone().attr("id", "").appendTo(e.find(".card-content"));
+				e.find("#question").val(question);
 				e.find(".card-content select").material_select();
 				if(t === "6")
 				{
